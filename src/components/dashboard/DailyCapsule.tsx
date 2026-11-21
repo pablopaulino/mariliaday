@@ -6,6 +6,7 @@ import { formatDatePT, formatCompactNumber, formatNumber } from "@/lib/utils";
 import { Sparkles, Download, Flame, PlaySquare, MessageSquareHeart } from "lucide-react";
 import { SocialCardModal } from "@/components/cards/SocialCardModal";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { PREVIEW_TRACKS_CATALOG } from "@/context/AudioPlayerContext";
 
 interface DailyCapsuleProps {
   stats: ArtistDailyStats;
@@ -24,6 +25,27 @@ export function DailyCapsule({
 
   const top3Spotify = topSpotify.slice(0, 3);
   const top1Youtube = topYoutube[0];
+
+  const getCoverUrl = (trackTitle?: string, fallbackCover?: string) => {
+    if (!trackTitle) return PREVIEW_TRACKS_CATALOG["leao"]?.artworkUrl || "/marilia-crown-banner.jpg";
+    const slug = trackTitle
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    const hit =
+      PREVIEW_TRACKS_CATALOG[slug] ||
+      Object.values(PREVIEW_TRACKS_CATALOG).find(
+        (t) => t.title?.toLowerCase().includes(trackTitle.toLowerCase())
+      );
+
+    if (hit?.artworkUrl) return hit.artworkUrl;
+    if (fallbackCover && !fallbackCover.includes("i.scdn.co")) return fallbackCover;
+    return PREVIEW_TRACKS_CATALOG["leao"]?.artworkUrl || "/marilia-crown-banner.jpg";
+  };
 
   return (
     <>
@@ -78,7 +100,7 @@ export function DailyCapsule({
                     </span>
                     <div className="relative h-8 w-8 shrink-0 rounded-md overflow-hidden bg-zinc-800 border border-zinc-700">
                       <ImageWithFallback
-                        src={item.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b273680345244dcab673f3a1389d"}
+                        src={getCoverUrl(item.track?.title, item.track?.cover_url)}
                         alt={item.track?.title || "Capa"}
                         fill
                         className="object-cover"
@@ -115,7 +137,7 @@ export function DailyCapsule({
                 <div className="flex items-center gap-3">
                   <div className="relative h-12 w-12 shrink-0 rounded-lg overflow-hidden border border-rose-500/30 bg-zinc-800">
                     <ImageWithFallback
-                      src={top1Youtube.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b273cbd4edcc2a7def9bb6016094"}
+                      src={getCoverUrl(top1Youtube.track?.title, top1Youtube.track?.cover_url)}
                       alt={top1Youtube.track?.title || "Clipe"}
                       fill
                       className="object-cover"

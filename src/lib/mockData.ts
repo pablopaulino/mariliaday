@@ -1,7 +1,7 @@
 import { ArtistDailyStats, Track, TrackDailyMetric, Milestone, FanMessage, Ephemeris, AlbumSummary } from "@/types";
 
 export const initialArtistStats: ArtistDailyStats = {
-  date: "2026-11-14",
+  date: "2026-11-20",
   spotify_monthly_listeners: 13942810,
   spotify_listeners_delta: 34910, // +34.9k listeners today
   spotify_followers: 41614259, // 41.6M+ seguidores oficiais

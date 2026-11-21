@@ -1,8 +1,8 @@
 "use client";
 
 import { Feather, Sparkles, Music, Play, ExternalLink, Flame } from "lucide-react";
-import { useAudioPlayer } from "@/context/AudioPlayerContext";
-import Image from "next/image";
+import { useAudioPlayer, PREVIEW_TRACKS_CATALOG } from "@/context/AudioPlayerContext";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 interface ComposedHit {
   id: string;
@@ -23,8 +23,8 @@ const COMPOSED_HITS: ComposedHit[] = [
     year: 2014,
     totalStreams: "+1,2 Bilhão",
     story: "Composta por Marília aos 18 anos, tornou-se o maior clássico de término e desapego da música brasileira moderna, liderando rádios por mais de 6 meses ininterruptos.",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27382d61973fb0317e0b5ce976d",
-    audioUrl: "https://p.scdn.co/mp3-preview/a9ffb45dbe7b71360155b1064d4ef701729000a6",
+    coverUrl: PREVIEW_TRACKS_CATALOG["cuida-bem-dela"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b7/41/9c/b7419cae-9f05-be20-46f3-ac901e027c73/00602438992638_Cover.jpg/600x600bb.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["cuida-bem-dela"]?.previewUrl,
   },
   {
     id: "ate-voce-voltar",
@@ -33,8 +33,8 @@ const COMPOSED_HITS: ComposedHit[] = [
     year: 2014,
     totalStreams: "+980 Milhões",
     story: "Um dos maiores hinos de saudade do sertanejo. A canção consolidou Henrique & Juliano no topo do Brasil e provou a força da poesia visceral de Marília.",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27382d61973fb0317e0b5ce976d",
-    audioUrl: "https://p.scdn.co/mp3-preview/c87d46fc9df9ea0b13cf2d07524e9fb5a28b6d85",
+    coverUrl: PREVIEW_TRACKS_CATALOG["ate-voce-voltar"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music/v4/30/4e/32/304e3292-d4e1-05c1-2158-6e14b5ab6cef/7891430363123.jpg/600x600bb.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["ate-voce-voltar"]?.previewUrl,
   },
   {
     id: "calma",
@@ -43,8 +43,8 @@ const COMPOSED_HITS: ComposedHit[] = [
     year: 2014,
     totalStreams: "+680 Milhões",
     story: "Gravada pela maior dupla do país no DVD 'Os Anjos Cantam', revelou ao mercado o talento maduro e emocionante de Marília Mendonça como autora.",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b2737604f56fba11b012678da47f",
-    audioUrl: "https://p.scdn.co/mp3-preview/bd7f0e340a6e9bb3bcda6696b5a32976be651343",
+    coverUrl: PREVIEW_TRACKS_CATALOG["calma"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/de/b1/13/deb1133a-2388-c753-a5ad-4d4659cef9f9/7891430378028.jpg/600x600bb.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["calma"]?.previewUrl,
   },
   {
     id: "e-com-ela-que-eu-estou",
@@ -53,8 +53,8 @@ const COMPOSED_HITS: ComposedHit[] = [
     year: 2014,
     totalStreams: "+750 Milhões",
     story: "Um dos maiores sucessos da carreira inesquecível de Cristiano Araújo. A letra sincera e direta conquistou o país e permanece como um clássico eterno.",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273b378037a544c4e09f58c70fa",
-    audioUrl: "https://p.scdn.co/mp3-preview/bb1507f311c6d36e2f411b439c36209bb10d9da9",
+    coverUrl: PREVIEW_TRACKS_CATALOG["e-com-ela-que-eu-estou"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music3/v4/29/7d/48/297d4822-dc9b-3da3-f08c-97994a920c33/7891430371425.jpg/600x600bb.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["e-com-ela-que-eu-estou"]?.previewUrl,
   },
   {
     id: "muito-gelo-e-pouco-uisque",
@@ -63,18 +63,18 @@ const COMPOSED_HITS: ComposedHit[] = [
     year: 2015,
     totalStreams: "+420 Milhões",
     story: "Marília expandiu seu domínio para o forró e a música de balada, compondo este hit histórico que tocou em todos os carnavais e vaquejadas do país.",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
-    audioUrl: "https://p.scdn.co/mp3-preview/4568600d3d376ca32454b6d910a373d32551a0fc",
+    coverUrl: PREVIEW_TRACKS_CATALOG["muito-gelo-e-pouco-uisque"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/6b/61/3e/6b613eef-d2af-b237-0336-5b214527317e/889845933281.jpg/600x600bb.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["muito-gelo-e-pouco-uisque"]?.previewUrl,
   },
   {
     id: "incerteza",
-    title: "Incerteza",
+    title: "Ser Humano Ou Anjo",
     recordedBy: "Matheus & Kauan",
-    year: 2016,
+    year: 2015,
     totalStreams: "+510 Milhões",
-    story: "Composta em parceria, tornou-se faixa essencial no repertório da dupla, carregando o DNA lírico inconfundível de versos afiados sobre indecisão amorosa.",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273e9788f6114e91fc8a38b1e42",
-    audioUrl: "https://p.scdn.co/mp3-preview/9f7e5bbf223403a74653606f71d1efd15e2197f2",
+    story: "Composição poética de Marília gravada no histórico álbum 'Na Praia', tornando-se hino romântico que tocou milhões de corações em todo o Brasil.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["incerteza"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/52/a5/aa/52a5aa33-ec6b-1c52-fd57-73a183f587b0/191773483616.jpg/600x600bb.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["incerteza"]?.previewUrl,
   },
 ];
 
@@ -82,17 +82,15 @@ export function ComposerLegacy() {
   const { playTrack, currentTrack, isPlaying } = useAudioPlayer();
 
   const handlePlay = (hit: ComposedHit) => {
-    if (hit.audioUrl) {
-      playTrack({
-        id: hit.id,
-        title: hit.title,
-        artist: hit.recordedBy,
-        album: `Composta por Marília Mendonça (${hit.year})`,
-        coverUrl: hit.coverUrl,
-        audioUrl: hit.audioUrl,
-        era: "Marília Compositora",
-      });
-    }
+    playTrack({
+      id: hit.id,
+      title: hit.title,
+      artist: hit.recordedBy,
+      album: `Composta por Marília Mendonça (${hit.year})`,
+      coverUrl: hit.coverUrl,
+      audioUrl: hit.audioUrl,
+      era: "Marília Compositora",
+    });
   };
 
   return (
@@ -142,7 +140,7 @@ export function ComposerLegacy() {
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-white/10 shadow-md bg-zinc-900">
-                    <Image src={hit.coverUrl} alt={hit.title} fill className="object-cover" sizes="48px" />
+                    <ImageWithFallback src={hit.coverUrl} alt={hit.title} fill className="object-cover" sizes="48px" />
                   </div>
 
                   <div className="flex-1 min-w-0">

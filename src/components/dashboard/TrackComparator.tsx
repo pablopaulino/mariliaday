@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Swords, Play, Trophy, Sparkles, TrendingUp, Music2 } from "lucide-react";
 import { formatCompactNumber, formatNumber } from "@/lib/utils";
 import { useAudioPlayer, PREVIEW_TRACKS_CATALOG } from "@/context/AudioPlayerContext";
-import Image from "next/image";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 interface TrackCompareItem {
   id: string;
@@ -32,7 +32,7 @@ const COMPARABLE_TRACKS: TrackCompareItem[] = [
     allTimeRank: 1,
     certification: "Diamante Triplo 💎💎💎",
     nextMilestone: { target: 600000000, daysRemaining: 3 },
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b2737604f56fba11b012678da47f",
+    coverUrl: PREVIEW_TRACKS_CATALOG["leao"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/ed/f6/a7/edf6a74f-15fa-1b0e-f172-6c99841d1c32/7891430726072.jpg/600x600bb.jpg",
   },
   {
     id: "infiel",
@@ -45,7 +45,7 @@ const COMPARABLE_TRACKS: TrackCompareItem[] = [
     allTimeRank: 2,
     certification: "Diamante Quádruplo 💎💎💎💎",
     nextMilestone: { target: 700000000, daysRemaining: 34 },
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273b378037a544c4e09f58c70fa",
+    coverUrl: PREVIEW_TRACKS_CATALOG["infiel"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/1e/68/40/1e684061-025d-60a4-28d6-16cb4e0b37b7/7891430399023.jpg/600x600bb.jpg",
   },
   {
     id: "graveto",
@@ -58,7 +58,7 @@ const COMPARABLE_TRACKS: TrackCompareItem[] = [
     allTimeRank: 3,
     certification: "Diamante Duplo 💎💎",
     nextMilestone: { target: 450000000, daysRemaining: 106 },
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
+    coverUrl: PREVIEW_TRACKS_CATALOG["graveto"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/39/6f/f2/396ff221-0d64-8631-f465-04008eecd687/7891430449575.jpg/600x600bb.jpg",
   },
   {
     id: "de-quem-e-a-culpa",
@@ -71,7 +71,7 @@ const COMPARABLE_TRACKS: TrackCompareItem[] = [
     allTimeRank: 4,
     certification: "Diamante Triplo 💎💎💎",
     nextMilestone: { target: 650000000, daysRemaining: 124 },
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273e9788f6114e91fc8a38b1e42",
+    coverUrl: PREVIEW_TRACKS_CATALOG["de-quem-e-a-culpa"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music111/v4/0f/a4/be/0fa4be68-1e48-15f0-f1c0-fb5022b98564/7891430141875.jpg/600x600bb.jpg",
   },
   {
     id: "ciumeira",
@@ -84,7 +84,7 @@ const COMPARABLE_TRACKS: TrackCompareItem[] = [
     allTimeRank: 5,
     certification: "Diamante Duplo 💎💎",
     nextMilestone: { target: 600000000, daysRemaining: 141 },
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
+    coverUrl: PREVIEW_TRACKS_CATALOG["ciumeira"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/75/06/e3/7506e3f1-0bdb-1c7c-22a0-52f3d8026750/7891430355579.jpg/600x600bb.jpg",
   },
   {
     id: "supera",
@@ -97,7 +97,7 @@ const COMPARABLE_TRACKS: TrackCompareItem[] = [
     allTimeRank: 6,
     certification: "Diamante Duplo 💎💎",
     nextMilestone: { target: 600000000, daysRemaining: 39 },
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
+    coverUrl: PREVIEW_TRACKS_CATALOG["supera"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/28/88/8a/28888ad9-7027-56d0-2094-66c5c8e91021/7891430413873.jpg/600x600bb.jpg",
   },
   {
     id: "todo-mundo-vai-sofrer",
@@ -110,7 +110,7 @@ const COMPARABLE_TRACKS: TrackCompareItem[] = [
     allTimeRank: 7,
     certification: "Diamante Duplo 💎💎",
     nextMilestone: { target: 550000000, daysRemaining: 32 },
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
+    coverUrl: PREVIEW_TRACKS_CATALOG["todo-mundo-vai-sofrer"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/02/50/58/025058b0-d15e-041e-7b27-f88705e44c14/7891430385873.jpg/600x600bb.jpg",
   },
   {
     id: "eu-sei-de-cor",
@@ -123,7 +123,7 @@ const COMPARABLE_TRACKS: TrackCompareItem[] = [
     allTimeRank: 8,
     certification: "Diamante 💎",
     nextMilestone: { target: 450000000, daysRemaining: 156 },
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273e9788f6114e91fc8a38b1e42",
+    coverUrl: PREVIEW_TRACKS_CATALOG["eu-sei-de-cor"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/9f/1b/6b/9f1b6b0e-3ff7-d727-f79a-46d35e59d8f9/7891430121877.jpg/600x600bb.jpg",
   },
 ];
 
@@ -143,7 +143,7 @@ export function TrackComparator() {
       artist: "Marília Mendonça",
       album: track.album,
       coverUrl: track.coverUrl,
-      audioUrl: catalogItem?.audioUrl || "",
+      audioUrl: catalogItem?.previewUrl || catalogItem?.audioUrl || "",
       era: track.album,
     });
   };
@@ -225,7 +225,7 @@ export function TrackComparator() {
         <div className="p-6 rounded-3xl bg-black/40 border border-white/10 space-y-4 hover:border-amber-500/30 transition-all relative">
           <div className="flex items-center gap-4">
             <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-white/10 shadow-lg bg-zinc-900">
-              <Image src={track1.coverUrl} alt={track1.title} fill className="object-cover" sizes="64px" />
+              <ImageWithFallback src={track1.coverUrl} alt={track1.title} fill className="object-cover" sizes="64px" />
             </div>
 
             <div className="flex-1 min-w-0">
@@ -287,7 +287,7 @@ export function TrackComparator() {
         <div className="p-6 rounded-3xl bg-black/40 border border-white/10 space-y-4 hover:border-amber-500/30 transition-all relative">
           <div className="flex items-center gap-4">
             <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border border-white/10 shadow-lg bg-zinc-900">
-              <Image src={track2.coverUrl} alt={track2.title} fill className="object-cover" sizes="64px" />
+              <ImageWithFallback src={track2.coverUrl} alt={track2.title} fill className="object-cover" sizes="64px" />
             </div>
 
             <div className="flex-1 min-w-0">

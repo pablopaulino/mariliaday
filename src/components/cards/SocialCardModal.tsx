@@ -98,8 +98,8 @@ export function SocialCardModal({
   // Preloaded Base64 images
   const [images, setImages] = useState({
     crownBanner: "/marilia-crown-banner.jpg",
-    mariliaCircle: "https://i.scdn.co/image/ab6761610000e5ebe6395f30987a29e4bec7de11",
-    albumCover: topSpotify[0]?.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b2737604f56fba11b012678da47f",
+    mariliaCircle: "/marilia-ref1.jpg",
+    albumCover: topSpotify[0]?.track?.cover_url || "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/ed/f6/a7/edf6a74f-15fa-1b0e-f172-6c99841d1c32/7891430726072.jpg/600x600bb.jpg",
   });
 
   // Calculate dynamic scale for the preview to fit comfortably on all viewports
@@ -122,12 +122,13 @@ export function SocialCardModal({
     let isMounted = true;
     async function loadAllImages() {
       const coverUrl =
-        topSpotify[0]?.track?.cover_url ||
-        "https://i.scdn.co/image/ab67616d0000b2737604f56fba11b012678da47f";
+        topSpotify[0]?.track?.cover_url && !topSpotify[0].track.cover_url.includes("i.scdn.co")
+          ? topSpotify[0].track.cover_url
+          : "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/ed/f6/a7/edf6a74f-15fa-1b0e-f172-6c99841d1c32/7891430726072.jpg/600x600bb.jpg";
 
       const [bCrown, bCircle, bCover] = await Promise.all([
         urlToBase64("/marilia-crown-banner.jpg"),
-        urlToBase64("https://i.scdn.co/image/ab6761610000e5ebe6395f30987a29e4bec7de11"),
+        urlToBase64("/marilia-ref1.jpg"),
         urlToBase64(coverUrl),
       ]);
 

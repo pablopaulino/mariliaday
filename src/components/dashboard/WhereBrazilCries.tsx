@@ -121,18 +121,16 @@ export function WhereBrazilCries() {
   const { playTrack, currentTrack, isPlaying } = useAudioPlayer();
 
   const handlePlayFavorite = (city: CityData) => {
-    const catalogItem = PREVIEW_TRACKS_CATALOG[city.trackKey];
-    if (catalogItem) {
-      playTrack({
-        id: city.trackKey,
-        title: city.favoriteTrack,
-        artist: "Marília Mendonça",
-        album: catalogItem.album,
-        coverUrl: catalogItem.coverUrl || "https://i.scdn.co/image/ab67616d0000b2737604f56fba11b012678da47f",
-        audioUrl: catalogItem.audioUrl || "",
-        era: "Todos os Cantos",
-      });
-    }
+    const catalogItem = PREVIEW_TRACKS_CATALOG[city.trackKey] || PREVIEW_TRACKS_CATALOG["leao"];
+    playTrack({
+      id: city.trackKey,
+      title: city.favoriteTrack,
+      artist: "Marília Mendonça",
+      album: catalogItem?.album || "Todos os Cantos",
+      coverUrl: catalogItem?.artworkUrl || catalogItem?.coverUrl || PREVIEW_TRACKS_CATALOG["leao"].artworkUrl,
+      audioUrl: catalogItem?.previewUrl || catalogItem?.audioUrl || "",
+      era: "Todos os Cantos",
+    });
   };
 
   const isCurrentPlaying = currentTrack?.id === selectedCity.trackKey && isPlaying;

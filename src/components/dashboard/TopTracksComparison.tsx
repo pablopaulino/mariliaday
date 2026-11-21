@@ -19,6 +19,26 @@ export function TopTracksComparison({
   const [activeTab, setActiveTab] = useState<"both" | "spotify" | "youtube">("both");
   const { playTrack, currentTrack, isPlaying } = useAudioPlayer();
 
+  const getCoverUrl = (row: TrackDailyMetric) => {
+    const titleKey = row.track?.title
+      ?.toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "leao";
+
+    const catalogHit =
+      PREVIEW_TRACKS_CATALOG[titleKey] ||
+      Object.values(PREVIEW_TRACKS_CATALOG).find(
+        (t) => t.title?.toLowerCase().includes(row.track?.title?.toLowerCase() || "")
+      );
+
+    if (catalogHit?.artworkUrl) return catalogHit.artworkUrl;
+    if (row.track?.cover_url && !row.track.cover_url.includes("i.scdn.co")) return row.track.cover_url;
+    return PREVIEW_TRACKS_CATALOG["leao"]?.artworkUrl || "/marilia-crown-banner.jpg";
+  };
+
   const handlePlayRow = (row: TrackDailyMetric) => {
     const titleKey = row.track?.title
       ?.toLowerCase()
@@ -35,13 +55,15 @@ export function TopTracksComparison({
       ) ||
       PREVIEW_TRACKS_CATALOG["leao"];
 
+    const cover = getCoverUrl(row);
+
     playTrack({
       id: row.track_id || row.id || titleKey,
       title: row.track?.title || "Música Oficial",
       artist: "Marília Mendonça",
       album: row.track?.album_name,
-      coverUrl: row.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b273680345244dcab673f3a1389d",
-      audioUrl: catalogHit?.audioUrl || "https://p.scdn.co/mp3-preview/c87d46fc9df9ea0b13cf2d07524e9fb5a28b6d85",
+      coverUrl: cover,
+      audioUrl: catalogHit?.previewUrl || catalogHit?.audioUrl || PREVIEW_TRACKS_CATALOG["leao"]?.previewUrl,
       era: row.track?.era,
     });
   };
@@ -155,7 +177,7 @@ export function TopTracksComparison({
                     <div className="flex items-center gap-3 min-w-0 flex-1">
                       <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-md group/cover">
                         <ImageWithFallback
-                          src={row.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b273680345244dcab673f3a1389d"}
+                          src={getCoverUrl(row)}
                           alt={row.track?.title || "Capa"}
                           fill
                           className="object-cover group-hover/cover:scale-105 transition-transform"
@@ -236,7 +258,7 @@ export function TopTracksComparison({
                     <div className="flex items-center gap-3 min-w-0 flex-1">
                       <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-md group/cover">
                         <ImageWithFallback
-                          src={row.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b273cbd4edcc2a7def9bb6016094"}
+                          src={getCoverUrl(row)}
                           alt={row.track?.title || "Capa"}
                           fill
                           className="object-cover group-hover/cover:scale-105 transition-transform"

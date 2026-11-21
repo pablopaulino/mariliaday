@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useRef, useEffect, useCallback } from "react";
+import catalogData from "@/lib/verifiedCatalog.json";
 
 export interface AudioTrack {
   id: string;
@@ -8,9 +9,29 @@ export interface AudioTrack {
   artist: string;
   album?: string;
   coverUrl: string;
-  audioUrl: string;
+  audioUrl?: string;
   era?: string;
 }
+
+interface CatalogEntry {
+  title: string;
+  artist: string;
+  album?: string;
+  previewUrl: string;
+  artworkUrl: string;
+  audioUrl?: string;
+  coverUrl?: string;
+}
+
+export const PREVIEW_TRACKS_CATALOG: Record<string, CatalogEntry> = catalogData as Record<string, CatalogEntry>;
+
+// Provide aliases for keys with or without hyphens
+Object.keys(catalogData).forEach((key) => {
+  const normalizedKey = key.replace(/-/g, "");
+  if (!PREVIEW_TRACKS_CATALOG[normalizedKey]) {
+    PREVIEW_TRACKS_CATALOG[normalizedKey] = (catalogData as any)[key];
+  }
+});
 
 interface AudioPlayerContextType {
   currentTrack: AudioTrack | null;
@@ -19,6 +40,7 @@ interface AudioPlayerContextType {
   duration: number;
   progress: number;
   volume: number;
+  isLoading: boolean;
   playTrack: (track: AudioTrack) => void;
   pauseTrack: () => void;
   togglePlay: () => void;
@@ -29,80 +51,21 @@ interface AudioPlayerContextType {
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
 
-// High quality preview audio catalog for Marília Mendonça tracks
-export const PREVIEW_TRACKS_CATALOG: Record<string, Partial<AudioTrack>> = {
-  leao: {
-    title: "Leão",
-    artist: "Marília Mendonça",
-    album: "Decretos Reais, Vol. 2",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b2737604f56fba11b012678da47f",
-    audioUrl: "https://p.scdn.co/mp3-preview/c87d46fc9df9ea0b13cf2d07524e9fb5a28b6d85",
-  },
-  infiel: {
-    title: "Infiel (Ao Vivo)",
-    artist: "Marília Mendonça",
-    album: "Marília Mendonça: Ao Vivo",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273b378037a544c4e09f58c70fa",
-    audioUrl: "https://p.scdn.co/mp3-preview/a9ffb45dbe7b71360155b1064d4ef701729000a6",
-  },
-  graveto: {
-    title: "Graveto (Ao Vivo)",
-    artist: "Marília Mendonça",
-    album: "Todos os Cantos",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
-    audioUrl: "https://p.scdn.co/mp3-preview/bd7f0e340a6e9bb3bcda6696b5a32976be651343",
-  },
-  ciumeira: {
-    title: "Ciumeira (Ao Vivo)",
-    artist: "Marília Mendonça",
-    album: "Todos os Cantos",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
-    audioUrl: "https://p.scdn.co/mp3-preview/0d494fe9577bb2bb22a4d95b5840d21e06fa5278",
-  },
-  "de-quem-e-a-culpa": {
-    title: "De Quem É a Culpa?",
-    artist: "Marília Mendonça",
-    album: "Realidade (Ao Vivo)",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273e9788f6114e91fc8a38b1e42",
-    audioUrl: "https://p.scdn.co/mp3-preview/bb1507f311c6d36e2f411b439c36209bb10d9da9",
-  },
-  supera: {
-    title: "Supera (Ao Vivo)",
-    artist: "Marília Mendonça",
-    album: "Todos os Cantos",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
-    audioUrl: "https://p.scdn.co/mp3-preview/4568600d3d376ca32454b6d910a373d32551a0fc",
-  },
-  "todo-mundo-vai-sofrer": {
-    title: "Todo Mundo Vai Sofrer",
-    artist: "Marília Mendonça",
-    album: "Todos os Cantos",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
-    audioUrl: "https://p.scdn.co/mp3-preview/9f7e5bbf223403a74653606f71d1efd15e2197f2",
-  },
-  "eu-sei-de-cor": {
-    title: "Eu Sei De Cor",
-    artist: "Marília Mendonça",
-    album: "Agora É Que São Elas",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273e9788f6114e91fc8a38b1e42",
-    audioUrl: "https://p.scdn.co/mp3-preview/5d3151fa1657b98f58c7e1ee5445217bc67a1ca8",
-  },
-};
-
 export function AudioPlayerProvider({ children }: { children: React.ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState<AudioTrack | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(30);
-  const [volume, setVolumeState] = useState(0.85);
+  const [volume, setVolumeState] = useState(0.9);
+  const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      audioRef.current = new Audio();
-      audioRef.current.volume = volume;
-
-      const audio = audioRef.current;
+      const audio = new Audio();
+      audio.volume = volume;
+      audio.preload = "auto";
+      audioRef.current = audio;
 
       const handleTimeUpdate = () => {
         setCurrentTime(audio.currentTime);
@@ -116,48 +79,133 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
         setCurrentTime(0);
       };
 
-      const handleError = () => {
-        console.warn("[AudioPlayer] Erro na reprodução da faixa, pausando.");
+      const handlePlay = () => {
+        setIsPlaying(true);
+        setIsLoading(false);
+      };
+
+      const handleWaiting = () => {
+        setIsLoading(true);
+      };
+
+      const handlePlaying = () => {
+        setIsLoading(false);
+        setIsPlaying(true);
+      };
+
+      const handleError = (e: any) => {
+        console.warn("[AudioPlayer] Erro na reprodução da faixa:", e);
+        setIsLoading(false);
         setIsPlaying(false);
       };
 
       audio.addEventListener("timeupdate", handleTimeUpdate);
       audio.addEventListener("ended", handleEnded);
+      audio.addEventListener("play", handlePlay);
+      audio.addEventListener("playing", handlePlaying);
+      audio.addEventListener("waiting", handleWaiting);
       audio.addEventListener("error", handleError);
 
       return () => {
         audio.removeEventListener("timeupdate", handleTimeUpdate);
         audio.removeEventListener("ended", handleEnded);
+        audio.removeEventListener("play", handlePlay);
+        audio.removeEventListener("playing", handlePlaying);
+        audio.removeEventListener("waiting", handleWaiting);
         audio.removeEventListener("error", handleError);
         audio.pause();
       };
     }
   }, []);
 
-  const playTrack = useCallback((track: AudioTrack) => {
-    if (!audioRef.current) return;
+  const playTrack = useCallback(
+    (track: AudioTrack) => {
+      if (!audioRef.current) return;
 
-    if (currentTrack?.id === track.id) {
-      if (audioRef.current.paused) {
-        audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-      } else {
-        audioRef.current.pause();
-        setIsPlaying(false);
+      // Se clicar na mesma faixa que já está tocando, pausa/despausa
+      if (currentTrack?.id === track.id && audioRef.current.src) {
+        if (audioRef.current.paused) {
+          audioRef.current
+            .play()
+            .then(() => setIsPlaying(true))
+            .catch((err) => console.warn("[AudioPlayer] Erro ao retomar áudio:", err));
+        } else {
+          audioRef.current.pause();
+          setIsPlaying(false);
+        }
+        return;
       }
-      return;
-    }
 
-    setCurrentTrack(track);
-    audioRef.current.src = track.audioUrl;
-    audioRef.current.currentTime = 0;
-    audioRef.current
-      .play()
-      .then(() => setIsPlaying(true))
-      .catch((err) => {
-        console.warn("[AudioPlayer] Autoplay bloqueado pelo navegador:", err);
-        setIsPlaying(false);
-      });
-  }, [currentTrack]);
+      setIsLoading(true);
+
+      // Normaliza identificadores
+      const idSlug = (track.id || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+
+      const titleSlug = (track.title || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+
+      // Busca no catálogo verificado
+      const catalogHit: CatalogEntry | undefined =
+        PREVIEW_TRACKS_CATALOG[idSlug] ||
+        PREVIEW_TRACKS_CATALOG[titleSlug] ||
+        (Object.values(PREVIEW_TRACKS_CATALOG).find(
+          (item) =>
+            item.title.toLowerCase().includes(track.title.toLowerCase()) ||
+            track.title.toLowerCase().includes(item.title.toLowerCase().replace(/ \([^)]*\)/, ""))
+        ) as CatalogEntry | undefined) ||
+        PREVIEW_TRACKS_CATALOG["leao"];
+
+      // Determina URL de áudio permanente
+      let finalAudioUrl =
+        track.audioUrl && !track.audioUrl.includes("p.scdn.co")
+          ? track.audioUrl
+          : catalogHit?.previewUrl || catalogHit?.audioUrl || PREVIEW_TRACKS_CATALOG["leao"].previewUrl;
+
+      // Determina capa de alta resolução
+      let finalCoverUrl =
+        track.coverUrl && !track.coverUrl.includes("i.scdn.co")
+          ? track.coverUrl
+          : catalogHit?.artworkUrl || catalogHit?.coverUrl || PREVIEW_TRACKS_CATALOG["leao"].artworkUrl;
+
+      const updatedTrack: AudioTrack = {
+        ...track,
+        audioUrl: finalAudioUrl,
+        coverUrl: finalCoverUrl || track.coverUrl,
+      };
+
+      setCurrentTrack(updatedTrack);
+
+      // Toca o áudio de forma SÍNCRONA no contexto do clique
+      audioRef.current.src = finalAudioUrl;
+      audioRef.current.currentTime = 0;
+      const playPromise = audioRef.current.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            console.warn("[AudioPlayer] Reprodução bloqueada pelo navegador:", err);
+            setIsPlaying(false);
+            setIsLoading(false);
+          });
+      }
+    },
+    [currentTrack]
+  );
 
   const pauseTrack = useCallback(() => {
     if (audioRef.current) {
@@ -172,7 +220,10 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch((e) => console.warn("[AudioPlayer] Erro ao alternar play:", e));
     }
   }, [isPlaying]);
 
@@ -197,7 +248,6 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
     }
     setIsPlaying(false);
     setCurrentTrack(null);
-    setCurrentTime(0);
   }, []);
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -211,6 +261,7 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
         duration,
         progress,
         volume,
+        isLoading,
         playTrack,
         pauseTrack,
         togglePlay,
@@ -227,7 +278,7 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
 export function useAudioPlayer() {
   const context = useContext(AudioPlayerContext);
   if (!context) {
-    throw new Error("useAudioPlayer must be used within an AudioPlayerProvider");
+    throw new Error("useAudioPlayer deve ser usado dentro de um AudioPlayerProvider");
   }
   return context;
 }

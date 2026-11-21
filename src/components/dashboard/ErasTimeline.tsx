@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Disc, Play, Sparkles, Calendar, Trophy, Heart } from "lucide-react";
 import { useAudioPlayer, PREVIEW_TRACKS_CATALOG } from "@/context/AudioPlayerContext";
-import Image from "next/image";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 interface EraInfo {
   id: string;
@@ -28,7 +28,7 @@ const ERAS: EraInfo[] = [
     trackKey: "infiel",
     description: "Com apenas 20 anos, Marília subiu ao palco em Goiânia e revolucionou o sertanejo dominado por homens, transformando 'Infiel' na 2ª música mais tocada do mundo no YouTube em 2016.",
     milestone: "🏆 Álbum de Diamante e Consagração Nacional",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273b378037a544c4e09f58c70fa",
+    coverUrl: PREVIEW_TRACKS_CATALOG["infiel"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/1e/68/40/1e684061-025d-60a4-28d6-16cb4e0b37b7/7891430399023.jpg/600x600bb.jpg",
     badge: "O Início da Era de Ouro",
   },
   {
@@ -40,7 +40,7 @@ const ERAS: EraInfo[] = [
     trackKey: "de-quem-e-a-culpa",
     description: "Para mais de 40 mil pessoas na Amazônia, Marília entregou interpretações viscerais como 'Amante Não Tem Lar' e 'Eu Sei De Cor', quebrando recordes de rádio em todo o território nacional.",
     milestone: "👑 Recordista Absoluta de Arrecadação e Streaming",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b273e9788f6114e91fc8a38b1e42",
+    coverUrl: PREVIEW_TRACKS_CATALOG["de-quem-e-a-culpa"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music111/v4/0f/a4/be/0fa4be68-1e48-15f0-f1c0-fb5022b98564/7891430141875.jpg/600x600bb.jpg",
     badge: "Consagração nos Estádios",
   },
   {
@@ -52,7 +52,7 @@ const ERAS: EraInfo[] = [
     trackKey: "ciumeira",
     description: "Panfletando ela mesma nas ruas das capitais, Marília fez shows surpresa e gratuitos em praças de todas as regiões brasileiras, gerando hinos como Ciumeira, Supera, Graveto e Bebaça.",
     milestone: "🥇 Álbum Brasileiro Mais Ouvido na História do Spotify (+3,8B)",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b27303c7ea07c082531da1f7df2b",
+    coverUrl: PREVIEW_TRACKS_CATALOG["ciumeira"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/75/06/e3/7506e3f1-0bdb-1c7c-22a0-52f3d8026750/7891430355579.jpg/600x600bb.jpg",
     badge: "Patrimônio Cultural",
   },
   {
@@ -64,7 +64,7 @@ const ERAS: EraInfo[] = [
     trackKey: "todo-mundo-vai-sofrer",
     description: "Durante a pandemia, Marília e a dupla Maiara & Maraisa uniram forças no projeto 'Patroas'. No dia 8 de abril de 2020, Marília atingiu 3,31 milhões de espectadores simultâneos no YouTube, recorde mundial imbatível.",
     milestone: "✨ Recorde Mundial do Guinness (3,31M simultâneos)",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b2734ed454af2f9a6719f4155241",
+    coverUrl: PREVIEW_TRACKS_CATALOG["todo-mundo-vai-sofrer"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/02/50/58/025058b0-d15e-041e-7b27-f88705e44c14/7891430385873.jpg/600x600bb.jpg",
     badge: "Recorde Mundial",
   },
   {
@@ -76,7 +76,7 @@ const ERAS: EraInfo[] = [
     trackKey: "leao",
     description: "Mesmo após sua partida, seu legado alcançou novas alturas cósmicas: 'Leão' tornou-se a música em língua portuguesa mais reproduzida em um único dia no Spotify Global e o projeto conquistou o Grammy Latino.",
     milestone: "🏆 Vencedor do Grammy Latino de Melhor Álbum Sertanejo",
-    coverUrl: "https://i.scdn.co/image/ab67616d0000b2737604f56fba11b012678da47f",
+    coverUrl: PREVIEW_TRACKS_CATALOG["leao"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/ed/f6/a7/edf6a74f-15fa-1b0e-f172-6c99841d1c32/7891430726072.jpg/600x600bb.jpg",
     badge: "Eternidade & Grammy",
   },
 ];
@@ -93,7 +93,7 @@ export function ErasTimeline() {
       artist: "Marília Mendonça",
       album: era.title,
       coverUrl: era.coverUrl,
-      audioUrl: catalogItem?.audioUrl || "",
+      audioUrl: catalogItem?.previewUrl || catalogItem?.audioUrl || "",
       era: era.period,
     });
   };
@@ -153,14 +153,14 @@ export function ErasTimeline() {
           {/* Cover Art */}
           <div className="md:col-span-4 flex justify-center md:justify-start">
             <div className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-3xl overflow-hidden shadow-2xl border border-white/15 bg-zinc-900 group">
-              <Image
+              <ImageWithFallback
                 src={selectedEra.coverUrl}
                 alt={selectedEra.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                 sizes="256px"
               />
-              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono font-bold text-amber-400">
+              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono font-bold text-amber-400 z-10">
                 {selectedEra.period}
               </div>
             </div>
