@@ -1,0 +1,41 @@
+name: Marília Day - Daily Ingestion Pipeline
+
+on:
+  schedule:
+    # 03:00 BRT (06:00 UTC) e 15:00 BRT (18:00 UTC) - Mantém Supabase sempre ativo
+    - cron: '0 6 * * *'
+    - cron: '0 18 * * *'
+  workflow_dispatch: # Permite disparo manual com 1 clique pelo painel do GitHub Actions
+
+jobs:
+  run-daily-collectors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      SPOTIFY_ARTIST_ID: ${{ secrets.SPOTIFY_ARTIST_ID }}
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      YOUTUBE_CHANNEL_ID: ${{ secrets.YOUTUBE_CHANNEL_ID }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Master Ingestion Pipeline (Spotify, YouTube, Deezer, Milestones)
+        run: npm run collect:all
+
+      - name: Summary & Log Success
+        run: echo "Marília Day Daily Pipeline completed successfully at $(date -u)"
