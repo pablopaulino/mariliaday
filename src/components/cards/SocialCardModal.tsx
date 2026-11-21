@@ -98,7 +98,7 @@ export function SocialCardModal({
   // Preloaded Base64 images
   const [images, setImages] = useState({
     crownBanner: "/marilia-crown-banner.jpg",
-    mariliaCircle: "/marilia-ref1.jpg",
+    mariliaCircle: "https://i.scdn.co/image/ab6761610000e5ebe6395f30987a29e4bec7de11",
     albumCover: topSpotify[0]?.track?.cover_url || "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/ed/f6/a7/edf6a74f-15fa-1b0e-f172-6c99841d1c32/7891430726072.jpg/600x600bb.jpg",
   });
 
@@ -128,7 +128,7 @@ export function SocialCardModal({
 
       const [bCrown, bCircle, bCover] = await Promise.all([
         urlToBase64("/marilia-crown-banner.jpg"),
-        urlToBase64("/marilia-ref1.jpg"),
+        urlToBase64("https://i.scdn.co/image/ab6761610000e5ebe6395f30987a29e4bec7de11"),
         urlToBase64(coverUrl),
       ]);
 

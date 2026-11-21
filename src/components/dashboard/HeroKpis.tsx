@@ -65,7 +65,7 @@ export function HeroKpis({ stats }: HeroKpisProps) {
             <div className="relative w-64 h-80 sm:w-72 sm:h-92 rounded-2xl overflow-hidden border border-white/10 shadow-2xl group bg-zinc-900">
               {/* Foto 100% colorida e nítida sem filtro P&B */}
               <Image
-                src="/marilia-ref1.jpg"
+                src="https://i.scdn.co/image/ab6761610000e5ebe6395f30987a29e4bec7de11"
                 alt="Marília Mendonça"
                 fill
                 priority
