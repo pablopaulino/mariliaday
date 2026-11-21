@@ -7,6 +7,17 @@ export async function GET() {
   try {
     const startTime = Date.now();
 
+    if (!supabase) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Supabase não configurado ou variáveis de ambiente ausentes",
+          timestamp: new Date().toISOString(),
+        },
+        { status: 503 }
+      );
+    }
+
     // Consulta rápida no Supabase para manter o banco acordado
     const { data, error } = await supabase
       .from("artist_daily_stats")
