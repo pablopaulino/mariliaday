@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { TrackDailyMetric } from "@/types";
 import { formatNumber, formatCompactNumber } from "@/lib/utils";
-import { Flame, PlaySquare, ArrowUp, ArrowDown, Minus } from "lucide-react";
+import { Flame, PlaySquare, ArrowUp, ArrowDown, Minus, Play } from "lucide-react";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { useAudioPlayer, PREVIEW_TRACKS_CATALOG } from "@/context/AudioPlayerContext";
 
 interface TopTracksComparisonProps {
   spotifyTop: TrackDailyMetric[];
@@ -16,6 +17,34 @@ export function TopTracksComparison({
   youtubeTop,
 }: TopTracksComparisonProps) {
   const [activeTab, setActiveTab] = useState<"both" | "spotify" | "youtube">("both");
+  const { playTrack, currentTrack, isPlaying } = useAudioPlayer();
+
+  const handlePlayRow = (row: TrackDailyMetric) => {
+    const titleKey = row.track?.title
+      ?.toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "leao";
+
+    const catalogHit =
+      PREVIEW_TRACKS_CATALOG[titleKey] ||
+      Object.values(PREVIEW_TRACKS_CATALOG).find(
+        (t) => t.title?.toLowerCase().includes(row.track?.title?.toLowerCase() || "")
+      ) ||
+      PREVIEW_TRACKS_CATALOG["leao"];
+
+    playTrack({
+      id: row.track_id || row.id || titleKey,
+      title: row.track?.title || "Música Oficial",
+      artist: "Marília Mendonça",
+      album: row.track?.album_name,
+      coverUrl: row.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b273680345244dcab673f3a1389d",
+      audioUrl: catalogHit?.audioUrl || "https://p.scdn.co/mp3-preview/c87d46fc9df9ea0b13cf2d07524e9fb5a28b6d85",
+      era: row.track?.era,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -124,14 +153,21 @@ export function TopTracksComparison({
 
                     {/* Cover & Title */}
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-md">
+                      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-md group/cover">
                         <ImageWithFallback
                           src={row.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b273680345244dcab673f3a1389d"}
                           alt={row.track?.title || "Capa"}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform"
+                          className="object-cover group-hover/cover:scale-105 transition-transform"
                           sizes="44px"
                         />
+                        <button
+                          onClick={() => handlePlayRow(row)}
+                          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                          title="Tocar prévia"
+                        >
+                          <Play className="w-4 h-4 fill-amber-400 text-amber-400" />
+                        </button>
                       </div>
                       <div className="min-w-0">
                         <p className="font-bold text-sm text-white truncate group-hover:text-amber-300 transition-colors">
@@ -198,14 +234,21 @@ export function TopTracksComparison({
 
                     {/* Cover & Title */}
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-md">
+                      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-900 shadow-md group/cover">
                         <ImageWithFallback
                           src={row.track?.cover_url || "https://i.scdn.co/image/ab67616d0000b273cbd4edcc2a7def9bb6016094"}
                           alt={row.track?.title || "Capa"}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform"
+                          className="object-cover group-hover/cover:scale-105 transition-transform"
                           sizes="44px"
                         />
+                        <button
+                          onClick={() => handlePlayRow(row)}
+                          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                          title="Tocar prévia"
+                        >
+                          <Play className="w-4 h-4 fill-amber-400 text-amber-400" />
+                        </button>
                       </div>
                       <div className="min-w-0">
                         <p className="font-bold text-sm text-white truncate group-hover:text-rose-300 transition-colors">

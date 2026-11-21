@@ -3,6 +3,8 @@ import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
+import { FloatingAudioPlayer } from "@/components/player/FloatingAudioPlayer";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -46,10 +48,13 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${jakarta.variable} ${mono.variable} dark`}>
       <body className="min-h-screen bg-[#09090B] text-zinc-100 antialiased selection:bg-amber-500/30 selection:text-amber-200 font-sans">
-        <div className="fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(212,175,55,0.08),transparent_70%)]" />
-        <Navbar />
-        <main className="flex-1 pt-6 pb-16">{children}</main>
-        <Footer />
+        <AudioPlayerProvider>
+          <div className="fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(212,175,55,0.08),transparent_70%)]" />
+          <Navbar />
+          <main className="flex-1 pt-6 pb-16">{children}</main>
+          <Footer />
+          <FloatingAudioPlayer />
+        </AudioPlayerProvider>
       </body>
     </html>
   );
