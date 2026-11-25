@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 dotenv.config();
 
-const DEEZER_ARTIST_ID = "7733230";
+const DEEZER_ARTIST_ID = "7068771";
 
 export async function runDeezerCollector() {
   console.log("=================================================");

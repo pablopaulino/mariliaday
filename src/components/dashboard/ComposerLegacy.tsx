@@ -1,6 +1,7 @@
 "use client";
 
-import { Feather, Sparkles, Music, Play, ExternalLink, Flame } from "lucide-react";
+import { useState } from "react";
+import { Feather, Sparkles, Play, ChevronDown, ChevronUp, Music2 } from "lucide-react";
 import { useAudioPlayer, PREVIEW_TRACKS_CATALOG } from "@/context/AudioPlayerContext";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
@@ -8,7 +9,9 @@ interface ComposedHit {
   id: string;
   title: string;
   recordedBy: string;
+  category: "henrique_juliano" | "maiara_maraisa" | "outros";
   year: number;
+  coWriters: string;
   totalStreams: string;
   story: string;
   coverUrl: string;
@@ -20,66 +23,203 @@ const COMPOSED_HITS: ComposedHit[] = [
     id: "cuida-bem-dela",
     title: "Cuida Bem Dela",
     recordedBy: "Henrique & Juliano",
+    category: "henrique_juliano",
     year: 2014,
+    coWriters: "Marília Mendonça / Juliano Tchula / Maraisa",
     totalStreams: "+1,2 Bilhão",
-    story: "Composta por Marília aos 18 anos, tornou-se o maior clássico de término e desapego da música brasileira moderna, liderando rádios por mais de 6 meses ininterruptos.",
-    coverUrl: PREVIEW_TRACKS_CATALOG["cuida-bem-dela"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b7/41/9c/b7419cae-9f05-be20-46f3-ac901e027c73/00602438992638_Cover.jpg/600x600bb.jpg",
+    story: "Um dos maiores clássicos da música brasileira moderna, liderou rádios por mais de 6 meses ininterruptos.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["cuida-bem-dela"]?.artworkUrl || "/marilia-crown-banner.jpg",
     audioUrl: PREVIEW_TRACKS_CATALOG["cuida-bem-dela"]?.previewUrl,
+  },
+  {
+    id: "flor-e-o-beija-flor",
+    title: "Flor e o Beija-Flor",
+    recordedBy: "Henrique & Juliano (c/ Marília)",
+    category: "henrique_juliano",
+    year: 2015,
+    coWriters: "Marília Mendonça / Juliano Tchula",
+    totalStreams: "+1,1 Bilhão",
+    story: "Composição poética assinada com Juliano Tchula no DVD 'Novas Histórias', onde Marília também brilhou nos vocais.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["flor-e-o-beija-flor"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["flor-e-o-beija-flor"]?.previewUrl,
   },
   {
     id: "ate-voce-voltar",
     title: "Até Você Voltar",
     recordedBy: "Henrique & Juliano",
+    category: "henrique_juliano",
     year: 2014,
+    coWriters: "Marília Mendonça / Juliano Tchula",
     totalStreams: "+980 Milhões",
-    story: "Um dos maiores hinos de saudade do sertanejo. A canção consolidou Henrique & Juliano no topo do Brasil e provou a força da poesia visceral de Marília.",
-    coverUrl: PREVIEW_TRACKS_CATALOG["ate-voce-voltar"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music/v4/30/4e/32/304e3292-d4e1-05c1-2158-6e14b5ab6cef/7891430363123.jpg/600x600bb.jpg",
+    story: "Hino visceral de saudade que consolidou Henrique & Juliano no topo do país e mostrou a força autoral de Marília.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["ate-voce-voltar"]?.artworkUrl || "/marilia-crown-banner.jpg",
     audioUrl: PREVIEW_TRACKS_CATALOG["ate-voce-voltar"]?.previewUrl,
-  },
-  {
-    id: "calma",
-    title: "Calma",
-    recordedBy: "Jorge & Mateus",
-    year: 2014,
-    totalStreams: "+680 Milhões",
-    story: "Gravada pela maior dupla do país no DVD 'Os Anjos Cantam', revelou ao mercado o talento maduro e emocionante de Marília Mendonça como autora.",
-    coverUrl: PREVIEW_TRACKS_CATALOG["calma"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/de/b1/13/deb1133a-2388-c753-a5ad-4d4659cef9f9/7891430378028.jpg/600x600bb.jpg",
-    audioUrl: PREVIEW_TRACKS_CATALOG["calma"]?.previewUrl,
   },
   {
     id: "e-com-ela-que-eu-estou",
     title: "É Com Ela Que Eu Estou",
     recordedBy: "Cristiano Araújo",
+    category: "outros",
     year: 2014,
+    coWriters: "Marília Mendonça / Frederico / Cristiano Araújo / Juliano Tchula",
     totalStreams: "+750 Milhões",
-    story: "Um dos maiores sucessos da carreira inesquecível de Cristiano Araújo. A letra sincera e direta conquistou o país e permanece como um clássico eterno.",
-    coverUrl: PREVIEW_TRACKS_CATALOG["e-com-ela-que-eu-estou"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music3/v4/29/7d/48/297d4822-dc9b-3da3-f08c-97994a920c33/7891430371425.jpg/600x600bb.jpg",
+    story: "Um dos maiores hinos da carreira eterna de Cristiano Araújo. Letra sincera e arrebatadora.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["e-com-ela-que-eu-estou"]?.artworkUrl || "/marilia-crown-banner.jpg",
     audioUrl: PREVIEW_TRACKS_CATALOG["e-com-ela-que-eu-estou"]?.previewUrl,
+  },
+  {
+    id: "calma",
+    title: "Calma",
+    recordedBy: "Jorge & Mateus",
+    category: "outros",
+    year: 2014,
+    coWriters: "Marília Mendonça / Élcio di Carvalho / Daniel Rodrigues / Ednan Willian",
+    totalStreams: "+680 Milhões",
+    story: "Gravada pela maior dupla do país no álbum 'Os Anjos Cantam', revelando a maturidade precoce de Marília como autora.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["calma"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["calma"]?.previewUrl,
+  },
+  {
+    id: "minha-heranca",
+    title: "Minha Herança (Aos 12 Anos!)",
+    recordedBy: "João Neto & Frederico",
+    category: "outros",
+    year: 2007,
+    coWriters: "Marília Mendonça / Frederico",
+    totalStreams: "Marco Inaugural",
+    story: "Coescrita quando Marília tinha apenas 12 anos de idade! Foi a porta de entrada da compositora prodígio no mercado sertanejo.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["minha-heranca"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["minha-heranca"]?.previewUrl,
+  },
+  {
+    id: "impasse",
+    title: "Impasse",
+    recordedBy: "Marília Mendonça feat. Henrique & Juliano",
+    category: "henrique_juliano",
+    year: 2015,
+    coWriters: "Marília Mendonça",
+    totalStreams: "+260 Milhões",
+    story: "Composta e gravada por Marília ao lado dos amigos Henrique & Juliano — faixa que impulsionou sua transição para os palcos.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["impasse"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["impasse"]?.previewUrl,
+  },
+  {
+    id: "mudou-a-estacao",
+    title: "Mudou a Estação",
+    recordedBy: "Henrique & Juliano (c/ Marília)",
+    category: "henrique_juliano",
+    year: 2017,
+    coWriters: "Marília Mendonça",
+    totalStreams: "+290 Milhões",
+    story: "Mais uma parceria visceral da safra dourada de Goiânia entre Marília e a dupla Henrique & Juliano.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["mudou-a-estacao"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["mudou-a-estacao"]?.previewUrl,
+  },
+  {
+    id: "no-dia-do-seu-casamento",
+    title: "No Dia do Seu Casamento",
+    recordedBy: "Maiara & Maraisa",
+    category: "maiara_maraisa",
+    year: 2015,
+    coWriters: "Marília Mendonça / Juliano Tchula / Maraisa",
+    totalStreams: "+310 Milhões",
+    story: "Hit avassalador da amizade histórica das Patroas em Goiânia antes mesmo do projeto conjunto existir.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["no-dia-do-seu-casamento"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["no-dia-do-seu-casamento"]?.previewUrl,
+  },
+  {
+    id: "dois-idiotas",
+    title: "Dois Idiotas",
+    recordedBy: "Maiara & Maraisa",
+    category: "maiara_maraisa",
+    year: 2015,
+    coWriters: "Marília Mendonça",
+    totalStreams: "+180 Milhões",
+    story: "Composição marcante da fase inicial de Maiara & Maraisa escrita em parceria com a Rainha da Sofrência.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["dois-idiotas"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["dois-idiotas"]?.previewUrl,
+  },
+  {
+    id: "show-completo",
+    title: "Show Completo",
+    recordedBy: "Maiara & Maraisa",
+    category: "maiara_maraisa",
+    year: 2016,
+    coWriters: "Marília Mendonça",
+    totalStreams: "+160 Milhões",
+    story: "Faixa icônica do DVD 'Ao Vivo em Goiânia' que ajudou a consolidar a revolução feminina no sertanejo.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["show-completo"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["show-completo"]?.previewUrl,
+  },
+  {
+    id: "incerteza",
+    title: "Ser Humano Ou Anjo (Álbum 'Incerteza' / Na Praia)",
+    recordedBy: "Matheus & Kauan",
+    category: "outros",
+    year: 2015,
+    coWriters: "Marília Mendonça (também coautora de 'Incerteza')",
+    totalStreams: "+510 Milhões",
+    story: "Parceria poética de Marília com Matheus & Kauan, incluindo os sucessos românticos que marcaram 'Na Praia'.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["incerteza"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["incerteza"]?.previewUrl,
   },
   {
     id: "muito-gelo-e-pouco-uisque",
     title: "Muito Gelo e Pouco Uísque",
     recordedBy: "Wesley Safadão",
+    category: "outros",
     year: 2015,
+    coWriters: "Marília Mendonça",
     totalStreams: "+420 Milhões",
-    story: "Marília expandiu seu domínio para o forró e a música de balada, compondo este hit histórico que tocou em todos os carnavais e vaquejadas do país.",
-    coverUrl: PREVIEW_TRACKS_CATALOG["muito-gelo-e-pouco-uisque"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/6b/61/3e/6b613eef-d2af-b237-0336-5b214527317e/889845933281.jpg/600x600bb.jpg",
+    story: "Mostrando versatilidade fora do sertanejo, Marília emplacou este megahit do forró elétrico e vaquejadas em todo o Brasil.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["muito-gelo-e-pouco-uisque"]?.artworkUrl || "/marilia-crown-banner.jpg",
     audioUrl: PREVIEW_TRACKS_CATALOG["muito-gelo-e-pouco-uisque"]?.previewUrl,
   },
   {
-    id: "incerteza",
-    title: "Ser Humano Ou Anjo",
-    recordedBy: "Matheus & Kauan",
+    id: "gago",
+    title: "Gago",
+    recordedBy: "Lucas Lucco",
+    category: "outros",
+    year: 2014,
+    coWriters: "Marília Mendonça / Juliano Tchula / Gregory Castro",
+    totalStreams: "+120 Milhões",
+    story: "Um dos grandes sucessos românticos gravados por Lucas Lucco (ao lado de 'Saudade Idiota', também de Marília).",
+    coverUrl: PREVIEW_TRACKS_CATALOG["gago"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["gago"]?.previewUrl,
+  },
+  {
+    id: "preferencia",
+    title: "Preferência",
+    recordedBy: "Cleber & Cauan",
+    category: "outros",
     year: 2015,
-    totalStreams: "+510 Milhões",
-    story: "Composição poética de Marília gravada no histórico álbum 'Na Praia', tornando-se hino romântico que tocou milhões de corações em todo o Brasil.",
-    coverUrl: PREVIEW_TRACKS_CATALOG["incerteza"]?.artworkUrl || "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/52/a5/aa/52a5aa33-ec6b-1c52-fd57-73a183f587b0/191773483616.jpg/600x600bb.jpg",
-    audioUrl: PREVIEW_TRACKS_CATALOG["incerteza"]?.previewUrl,
+    coWriters: "Marília Mendonça",
+    totalStreams: "+95 Milhões",
+    story: "Clássico goiano composto por Marília que virou destaque obrigatório nas noites e rodeios do Centro-Oeste.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["preferencia"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["preferencia"]?.previewUrl,
+  },
+  {
+    id: "vai-ter-balanga",
+    title: "Vai Ter Balanga",
+    recordedBy: "João Neto & Frederico",
+    category: "outros",
+    year: 2014,
+    coWriters: "Marília Mendonça",
+    totalStreams: "+80 Milhões",
+    story: "Lado descontraído e dançante da caneta de Marília gravado pelos primeiros incentivadores de sua carreira.",
+    coverUrl: PREVIEW_TRACKS_CATALOG["vai-ter-balanga"]?.artworkUrl || "/marilia-crown-banner.jpg",
+    audioUrl: PREVIEW_TRACKS_CATALOG["vai-ter-balanga"]?.previewUrl,
   },
 ];
 
 export function ComposerLegacy() {
   const { playTrack, currentTrack, isPlaying } = useAudioPlayer();
+  const [filter, setFilter] = useState<"all" | "henrique_juliano" | "maiara_maraisa" | "outros">("all");
+  const [showAll, setShowAll] = useState(false);
+
+  const filteredHits = COMPOSED_HITS.filter((h) => filter === "all" || h.category === filter);
+  const visibleHits = showAll || filter !== "all" ? filteredHits : filteredHits.slice(0, 6);
 
   const handlePlay = (hit: ComposedHit) => {
     playTrack({
@@ -100,16 +240,16 @@ export function ComposerLegacy() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
             <Feather className="h-3.5 w-3.5" />
-            <span>O Legado Autoral da Rainha</span>
+            <span>O Legado Autoral da Rainha • Catálogo Ecad</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex flex-wrap items-center gap-2">
             <span>Marília Compositora</span>
             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
-              A Caneta Mais Valiosa do Brasil
+              Centenas de Obras Registradas desde os 12 Anos
             </span>
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Antes e durante sua consagração nos palcos, Marília assinou os maiores hinos cantados por outras lendas da música.
+            Dos 12 aos 19 anos sustentou sua família nos bastidores escrevendo hinos do sertanejo, forró, arrocha e axé para os maiores artistas do país.
           </p>
         </div>
 
@@ -123,14 +263,36 @@ export function ComposerLegacy() {
             <div className="text-xl sm:text-2xl font-black font-mono text-white text-gold-gradient">
               +15 Bilhões de Streams
             </div>
-            <span className="text-[10px] text-zinc-500">em vozes de terceiros</span>
+            <span className="text-[10px] text-zinc-400">em vozes de dezenas de intérpretes</span>
           </div>
         </div>
       </div>
 
+      {/* Category Filter Pills */}
+      <div className="flex flex-wrap gap-2">
+        {[
+          { id: "all", label: `Todos os Destaques (${COMPOSED_HITS.length})` },
+          { id: "henrique_juliano", label: "Henrique & Juliano" },
+          { id: "maiara_maraisa", label: "Maiara & Maraisa" },
+          { id: "outros", label: "Outros Gigantes & Ritmos" },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setFilter(tab.id as any)}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              filter === tab.id
+                ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
+                : "bg-black/40 border border-white/10 text-zinc-400 hover:text-white"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {/* Grid of Composition Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {COMPOSED_HITS.map((hit) => {
+        {visibleHits.map((hit) => {
           const isCurrentPlaying = currentTrack?.id === hit.id && isPlaying;
           return (
             <div
@@ -158,24 +320,56 @@ export function ComposerLegacy() {
                   <button
                     onClick={() => handlePlay(hit)}
                     className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 hover:bg-amber-500 hover:text-black transition-all shrink-0"
-                    title="Ouvir prévia"
+                    title="Ouvir prévia de 30s"
                   >
                     <Play className={`w-3.5 h-3.5 fill-current ${isCurrentPlaying ? "animate-pulse" : ""}`} />
                   </button>
                 </div>
 
-                <p className="text-xs text-zinc-300 leading-relaxed font-normal">
-                  {hit.story}
-                </p>
+                <p className="text-xs text-zinc-300 leading-relaxed font-normal">{hit.story}</p>
+                <p className="text-[10px] text-zinc-500 truncate">Autores: {hit.coWriters}</p>
               </div>
 
               <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs">
-                <span className="text-zinc-500">Consumo Acumulado:</span>
+                <span className="text-zinc-500">Consumo / Marco:</span>
                 <strong className="font-mono font-bold text-amber-300">{hit.totalStreams}</strong>
               </div>
             </div>
           );
         })}
+      </div>
+
+      {/* Expand/Collapse button */}
+      {filter === "all" && COMPOSED_HITS.length > 6 && (
+        <div className="flex justify-center">
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/40 border border-white/10 text-xs font-bold text-zinc-300 hover:text-white hover:border-amber-500/30 transition-all"
+          >
+            {showAll ? (
+              <>
+                <ChevronUp className="w-3.5 h-3.5" />
+                <span>Mostrar menos</span>
+              </>
+            ) : (
+              <>
+                <ChevronDown className="w-3.5 h-3.5" />
+                <span>Ver todas as {COMPOSED_HITS.length} composições com prévia de áudio</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Extra Ecad & Multigenero Footnote */}
+      <div className="p-4 rounded-2xl bg-black/30 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="flex items-start gap-2.5 text-zinc-300">
+          <Music2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <span>
+            <strong className="text-white">Versatilidade Ecad &amp; Outros Ritmos:</strong> Também compôs sucessos como <em>&quot;Abaixa o Som&quot;</em> (Henrique &amp; Juliano), <em>&quot;É Rolo&quot;</em> e <em>&quot;Open Bar&quot;</em> (Maiara &amp; Maraisa), <em>&quot;Saudade Idiota&quot;</em> (Lucas Lucco) e faixas gravadas no forró, arrocha e axé por <strong>Joelma, Gabriel Diniz, Márcia Fellipe</strong> e <strong>Mara Pavanelly</strong>.
+          </span>
+        </div>
+        <span className="text-[11px] font-mono text-zinc-400 shrink-0">Parceiros: Juliano Tchula • Gabriel Agra • Élcio Di Carvalho</span>
       </div>
     </div>
   );

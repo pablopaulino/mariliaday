@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, HeartCrack, Play, Flame, Music, Award } from "lucide-react";
+import { MapPin, HeartCrack, Play, Flame, Music, Award, Users } from "lucide-react";
 import { useAudioPlayer, PREVIEW_TRACKS_CATALOG } from "@/context/AudioPlayerContext";
 
 interface CityData {
@@ -22,37 +22,37 @@ const CITIES: CityData[] = [
     id: "goiania",
     name: "Goiânia",
     state: "GO",
-    tagline: "O Berço da Sofrência & Onde Tudo Começou",
+    tagline: "O Berço da Sofrência & Estreia do Todos os Cantos",
     sharePercent: 18.4,
     dailyStreams: "~2,35 Milhões",
     favoriteTrack: "Infiel",
     trackKey: "infiel",
     sofrenciaIndex: 99,
-    curiosity: "Foi no coração de Goiás que Marília compôs suas primeiras canções aos 12 anos e gravou o DVD acústico que parou o país.",
+    curiosity: "Foi no coração de Goiás que Marília compôs suas primeiras canções aos 12 anos, gravou o DVD 'Ao Vivo' (2016) e estreou oficialmente a turnê 'Te Vejo em Todos os Cantos' em 23 de maio de 2019.",
   },
   {
     id: "sao-paulo",
     name: "São Paulo",
     state: "SP",
-    tagline: "A Maior Metrópole Apaixonada",
+    tagline: "A Maior Metrópole Apaixonada & Mostra no MIS",
     sharePercent: 16.8,
     dailyStreams: "~2,15 Milhões",
     favoriteTrack: "Leão",
     trackKey: "leao",
     sofrenciaIndex: 95,
-    curiosity: "São Paulo é a cidade no mundo que mais horas de Marília consome em fones de ouvido durante trajetos diários no metrô.",
+    curiosity: "São Paulo lidera em volume absoluto de ouvintes mensais e recebeu em 2026 a exposição oficial imersiva 'Sentimento Louco' ocupando dois andares no MIS (Museu da Imagem e do Som).",
   },
   {
     id: "belo-horizonte",
     name: "Belo Horizonte",
     state: "MG",
-    tagline: "Capital dos Bares & Corações Partidos",
+    tagline: "Praça da Estação: 50k–100k+ Pessoas no Centro",
     sharePercent: 12.2,
     dailyStreams: "~1,56 Milhão",
     favoriteTrack: "Graveto",
     trackKey: "graveto",
-    sofrenciaIndex: 94,
-    curiosity: "A capital dos botecos tem o maior índice per capita de reproduções de 'Graveto' nas noites de sexta e sábado.",
+    sofrenciaIndex: 97,
+    curiosity: "Em outubro de 2019, a polícia esperava cerca de 15 mil pessoas na Praça da Estação em BH — mas Marília panfletou pessoalmente nas ruas e atraiu entre 50 mil e mais de 100 mil pessoas, parando o centro da capital mineira.",
   },
   {
     id: "belem",
@@ -63,8 +63,8 @@ const CITIES: CityData[] = [
     dailyStreams: "~1,25 Milhão",
     favoriteTrack: "Ciumeira",
     trackKey: "ciumeira",
-    sofrenciaIndex: 97,
-    curiosity: "Em 2018, Marília apareceu de surpresa na Praça do Relógio em Belém e reuniu mais de 30 mil pessoas sem aviso prévio para gravar 'Ciumeira'.",
+    sofrenciaIndex: 96,
+    curiosity: "Em agosto de 2018, Marília apareceu de surpresa na Praça do Relógio em Belém após panfletar no centro e reuniu mais de 30 mil pessoas sem aviso prévio para gravar 'Ciumeira'.",
   },
   {
     id: "brasilia",
@@ -76,7 +76,7 @@ const CITIES: CityData[] = [
     favoriteTrack: "De Quem É a Culpa?",
     trackKey: "de-quem-e-a-culpa",
     sofrenciaIndex: 92,
-    curiosity: "A gravação surpresa no gramado da Esplanada dos Ministérios reuniu a maior multidão em praça pública de todo o projeto 'Todos os Cantos'.",
+    curiosity: "A gravação surpresa no gramado central de Brasília reuniu uma multidão histórica em praça pública durante o projeto itinerante 'Todos os Cantos'.",
   },
   {
     id: "fortaleza",
@@ -88,19 +88,19 @@ const CITIES: CityData[] = [
     favoriteTrack: "Supera",
     trackKey: "supera",
     sofrenciaIndex: 90,
-    curiosity: "Marília sempre declarou seu amor pelo público cearense, que transformou 'Supera' no hino oficial de superação amorosa no litoral.",
+    curiosity: "O público cearense abraçou Marília tanto no sertanejo quanto em suas composições para grandes nomes do forró como Wesley Safadão e Márcia Fellipe.",
   },
   {
     id: "salvador",
     name: "Salvador",
     state: "BA",
-    tagline: "O Trio Elétrico da Sofrência",
+    tagline: "O Encontro Sertanejo no Pelourinho",
     sharePercent: 6.8,
     dailyStreams: "~870 Mil",
     favoriteTrack: "Todo Mundo Vai Sofrer",
     trackKey: "todo-mundo-vai-sofrer",
     sofrenciaIndex: 89,
-    curiosity: "No Pelourinho, os tambores e os arranjos sertanejos se fundiram quando Marília gravou seu hit no coração histórico da Bahia.",
+    curiosity: "No Pelourinho em Salvador, Marília misturou a percussão baiana com o feminejo, protagonizando um dos episódios mais emocionantes da minissérie 'Todos os Cantos' na Globoplay.",
   },
   {
     id: "curitiba",
@@ -112,7 +112,7 @@ const CITIES: CityData[] = [
     favoriteTrack: "Eu Sei De Cor",
     trackKey: "eu-sei-de-cor",
     sofrenciaIndex: 86,
-    curiosity: "A capital paranaense lidera os índices de audição contínua dos álbuns completos no Spotify durante os meses de outono e inverno.",
+    curiosity: "A capital paranaense lidera os índices de audição contínua dos álbuns completos ('Realidade', 'Decretos Reais' e 'Manuscritos') durante todo o ano.",
   },
 ];
 
@@ -142,22 +142,28 @@ export function WhereBrazilCries() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
             <HeartCrack className="h-3.5 w-3.5 text-amber-400" />
-            <span>Geointeligência de Streaming</span>
+            <span>Geointeligência &amp; Rota &quot;Te Vejo em Todos os Cantos&quot;</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
             <span>Onde o Brasil Chora</span>
             <span className="text-amber-400 font-mono text-sm sm:text-base font-normal">
-              (Mapa de Consumo Regional)
+              (Mapa Regional)
             </span>
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            As capitais e regiões líderes onde a voz de Marília Mendonça mais ecoa todos os dias.
+            As capitais líderes de streaming e palco da turnê gratuita que reuniu ~1 milhão de pessoas com panfletagem nas ruas.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto px-3.5 py-1.5 rounded-full bg-black/40 border border-white/10 text-xs font-mono text-zinc-300">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>8 Capitais Monitoradas</span>
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-mono text-amber-300">
+            <Users className="w-3.5 h-3.5" />
+            <span>~1M de Público na Turnê</span>
+          </span>
+          <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 border border-white/10 text-xs font-mono text-zinc-300">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>8 Capitais</span>
+          </span>
         </div>
       </div>
 
@@ -215,7 +221,6 @@ export function WhereBrazilCries() {
                     <span className="text-[10px] text-zinc-500 font-mono">do consumo</span>
                   </div>
 
-                  {/* Progress mini bar */}
                   <div className="hidden sm:block w-16 h-2 bg-zinc-800 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full"
@@ -230,10 +235,8 @@ export function WhereBrazilCries() {
 
         {/* Right Column: Featured City Detail Card */}
         <div className="lg:col-span-5 p-6 rounded-3xl bg-gradient-to-b from-[#18181D] via-[#121215] to-[#0A0A0C] border border-amber-500/30 shadow-2xl space-y-6 relative overflow-hidden">
-          {/* Ambient Glow */}
           <div className="absolute top-0 right-0 w-44 h-44 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Header of selected city */}
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-1.5 text-xs text-amber-400 font-bold uppercase tracking-wider mb-1">
@@ -245,17 +248,16 @@ export function WhereBrazilCries() {
               </h3>
             </div>
 
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-end shrink-0">
               <span className="text-2xl font-black font-mono text-gold-gradient">
                 {selectedCity.sofrenciaIndex}
               </span>
-              <span className="text-[9px] uppercase font-bold tracking-widest text-zinc-400">
-                Índice de Sofrência
+              <span className="text-[9px] uppercase font-bold tracking-widest text-zinc-400 text-right">
+                Índice Sofrência
               </span>
             </div>
           </div>
 
-          {/* Key Metrics Grid */}
           <div className="grid grid-cols-2 gap-3">
             <div className="p-3.5 rounded-2xl bg-black/50 border border-white/5">
               <span className="text-xs text-zinc-400">Volume Diário Estimado:</span>
@@ -272,7 +274,6 @@ export function WhereBrazilCries() {
             </div>
           </div>
 
-          {/* Favorite Track Box with Listen Button */}
           <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -302,15 +303,18 @@ export function WhereBrazilCries() {
             </div>
           </div>
 
-          {/* Historical Trivia */}
           <div className="p-4 rounded-2xl bg-black/30 border border-white/5 space-y-1">
             <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
               <Flame className="w-3.5 h-3.5 text-amber-400" />
-              <span>Memória Histórica da Rainha</span>
+              <span>Memória Histórica na Cidade</span>
             </span>
             <p className="text-xs text-zinc-300 leading-relaxed font-normal">
               {selectedCity.curiosity}
             </p>
+          </div>
+
+          <div className="p-3 rounded-xl bg-zinc-900/70 border border-white/5 text-[11px] text-zinc-400">
+            Último show da trajetória ocorreu em <strong className="text-zinc-200">Sorocaba (SP) em 01/11/2021</strong>, antes da viagem a Caratinga (MG).
           </div>
         </div>
       </div>

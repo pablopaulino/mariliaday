@@ -12,11 +12,13 @@ export interface ArtistDailyStats {
 }
 
 export type MusicEra =
+  | "Início & Estreia (2014-2015)"
   | "Ao Vivo (2016)"
   | "Realidade (2017)"
   | "Todos os Cantos (2019)"
   | "Patroas (2020-2021)"
-  | "Decretos Reais (2022-2023)"
+  | "Decretos Reais (2022-2025)"
+  | "Manuscritos & Eternidade (2026)"
   | "Singles & Parcerias";
 
 export interface Track {
@@ -84,6 +86,11 @@ export interface AlbumSummary {
   name: string;
   era: MusicEra;
   release_year: number;
+  release_date?: string;
+  album_type?: "ao_vivo" | "colaborativo" | "postumo" | "ep" | "singles";
+  certification?: string;
+  award?: string;
+  description?: string;
   cover_url: string;
   total_spotify_streams: number;
   total_youtube_views: number;

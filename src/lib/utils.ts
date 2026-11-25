@@ -43,6 +43,25 @@ export function formatDatePT(dateStr: string): string {
   }
 }
 
+export function getBrazilTodayISO(): string {
+  return new Date().toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
+}
+
+export function formatMonthDayPT(monthDay: string, year?: number): string {
+  try {
+    const [m, d] = monthDay.split("-");
+    const months = [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+    const monthName = months[parseInt(m, 10) - 1] || m;
+    const dayNum = parseInt(d, 10);
+    return year ? `${dayNum} de ${monthName} de ${year}` : `${dayNum} de ${monthName}`;
+  } catch {
+    return year ? `${monthDay}/${year}` : monthDay;
+  }
+}
+
 export function calculateDaysRemaining(targetDateStr: string): number {
   try {
     const target = new Date(targetDateStr).getTime();

@@ -33,7 +33,7 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
     const baseStreams = (stats.spotify_daily_streams || 6940000) + (stats.youtube_daily_views || 5800000);
     const baseListeners = stats.spotify_monthly_listeners || 13942810;
 
-    const todayDate = stats.date ? new Date(stats.date) : new Date();
+    const todayDate = stats.date ? new Date(`${stats.date}T12:00:00`) : new Date();
 
     for (let i = daysCount - 1; i >= 0; i--) {
       const d = new Date(todayDate);

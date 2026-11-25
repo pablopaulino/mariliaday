@@ -1,5 +1,7 @@
-import { supabase, supabaseAdmin, isSupabaseConfigured } from "./supabase";
-import { ArtistDailyStats, TrackDailyMetric, Milestone, FanMessage, Ephemeris, AlbumSummary, Track } from "@/types";
+import { supabase, supabaseAdmin } from "./supabase";
+import { ArtistDailyStats, TrackDailyMetric, Milestone, FanMessage, Ephemeris, AlbumSummary } from "@/types";
+import { getBrazilTodayISO } from "./utils";
+import catalog from "./verifiedCatalog.json";
 import {
   initialArtistStats,
   historicalArtistStats,
@@ -13,6 +15,30 @@ import {
 
 const db = supabaseAdmin || supabase;
 
+function resolveVerifiedCover(title?: string, currentCover?: string): string {
+  if (currentCover && !currentCover.includes("i.scdn.co") && !currentCover.includes("images.unsplash.com")) {
+    return currentCover;
+  }
+  const slug = (title || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  const cat = catalog as Record<string, { artworkUrl: string }>;
+  if (cat[slug]?.artworkUrl) return cat[slug].artworkUrl;
+
+  const found = Object.values(cat).find((item) =>
+    item.artworkUrl && title && item.artworkUrl.length > 0 &&
+    JSON.stringify(item).toLowerCase().includes(title.toLowerCase())
+  );
+  if (found?.artworkUrl) return found.artworkUrl;
+
+  return cat["leao"].artworkUrl;
+}
+
 // 1. Estatísticas Gerais do Artista
 export async function getArtistStats(): Promise<{ today: ArtistDailyStats; history: ArtistDailyStats[] }> {
   if (db) {
@@ -21,7 +47,7 @@ export async function getArtistStats(): Promise<{ today: ArtistDailyStats; histo
         .from("artist_daily_stats")
         .select("*")
         .order("date", { ascending: false })
-        .limit(7);
+        .limit(14);
 
       if (!error && data && data.length > 0) {
         return {
@@ -45,7 +71,6 @@ export async function getArtistStats(): Promise<{ today: ArtistDailyStats; histo
 export async function getDailyTopMetrics(): Promise<{ spotifyTop: TrackDailyMetric[]; youtubeTop: TrackDailyMetric[] }> {
   if (db) {
     try {
-      // Pega a data mais recente
       const { data: latestDateRow } = await db
         .from("track_daily_metrics")
         .select("date")
@@ -53,7 +78,7 @@ export async function getDailyTopMetrics(): Promise<{ spotifyTop: TrackDailyMetr
         .limit(1)
         .single();
 
-      const targetDate = latestDateRow?.date || new Date().toISOString().split("T")[0];
+      const targetDate = latestDateRow?.date || getBrazilTodayISO();
 
       const { data: metrics, error } = await db
         .from("track_daily_metrics")
@@ -85,8 +110,16 @@ export async function getDailyTopMetrics(): Promise<{ spotifyTop: TrackDailyMetr
         .eq("date", targetDate);
 
       if (!error && metrics && metrics.length > 0) {
-        // Ordena para Top Spotify e Top YouTube
-        const typedMetrics = metrics as unknown as TrackDailyMetric[];
+        const typedMetrics = (metrics as unknown as TrackDailyMetric[]).map((m) => ({
+          ...m,
+          track: m.track
+            ? {
+                ...m.track,
+                cover_url: resolveVerifiedCover(m.track.title, m.track.cover_url),
+              }
+            : undefined,
+        }));
+
         const spotifyTop = [...typedMetrics].sort(
           (a, b) => (b.spotify_daily_streams || 0) - (a.spotify_daily_streams || 0)
         );
@@ -138,7 +171,15 @@ export async function getMilestones(): Promise<Milestone[]> {
         .order("target_value", { ascending: true });
 
       if (!error && data && data.length > 0) {
-        return data as unknown as Milestone[];
+        return (data as unknown as Milestone[]).map((m) => ({
+          ...m,
+          track: m.track
+            ? {
+                ...m.track,
+                cover_url: resolveVerifiedCover(m.track.title, m.track.cover_url),
+              }
+            : undefined,
+        }));
       }
       if (error) console.error("Erro ao buscar milestones:", error);
     } catch (e) {
@@ -197,14 +238,16 @@ export async function postFanMessage(msg: {
     try {
       const { data, error } = await db
         .from("fan_messages")
-        .insert([{
-          author_name: newEntry.author_name,
-          city_state: newEntry.city_state,
-          favorite_song: newEntry.favorite_song,
-          message: newEntry.message,
-          is_approved: true,
-          is_featured_today: false,
-        }])
+        .insert([
+          {
+            author_name: newEntry.author_name,
+            city_state: newEntry.city_state,
+            favorite_song: newEntry.favorite_song,
+            message: newEntry.message,
+            is_approved: true,
+            is_featured_today: false,
+          },
+        ])
         .select()
         .single();
 
@@ -220,13 +263,23 @@ export async function postFanMessage(msg: {
   return { success: true, message: "Sua mensagem foi publicada no Mural da Rainha!", data: newEntry };
 }
 
-// 6. Efemérides
+// 6. Efemérides (Memória Viva)
 export async function getEphemerides(): Promise<Ephemeris[]> {
   if (db) {
     try {
-      const { data, error } = await db.from("ephemerides").select("*");
-      if (!error && data && data.length > 0) {
-        return data as Ephemeris[];
+      const { data, error } = await db
+        .from("ephemerides")
+        .select("*")
+        .order("year", { ascending: false });
+
+      if (!error && data && data.length >= allEphemerides.length) {
+        return (data as Ephemeris[]).map((eph) => ({
+          ...eph,
+          image_url:
+            eph.image_url && !eph.image_url.includes("i.scdn.co")
+              ? eph.image_url
+              : (catalog as Record<string, { artworkUrl: string }>)["leao"].artworkUrl,
+        }));
       }
       if (error) console.error("Erro ao buscar ephemerides:", error);
     } catch (e) {
@@ -237,59 +290,57 @@ export async function getEphemerides(): Promise<Ephemeris[]> {
   return allEphemerides;
 }
 
-// 7. Discografia e Eras agregadas dinamicamente
+// 7. Discografia completa enriquecida com métricas reais do Supabase
 export async function getAlbums(): Promise<AlbumSummary[]> {
+  const baseAlbums = allAlbums.map((alb) => ({
+    ...alb,
+    tracks: alb.tracks.map((t) => ({ ...t })),
+  }));
+
   if (db) {
     try {
-      const { data: dbTracks } = await db.from("tracks").select("*, track_daily_metrics(*)");
+      const { data: latestDateRow } = await db
+        .from("track_daily_metrics")
+        .select("date")
+        .order("date", { ascending: false })
+        .limit(1)
+        .single();
 
-      if (dbTracks && dbTracks.length > 0) {
-        // Agrupa por álbum
-        const albumMap: Record<string, AlbumSummary> = {};
+      const targetDate = latestDateRow?.date;
+      if (targetDate) {
+        const { data: dbMetrics } = await db
+          .from("track_daily_metrics")
+          .select("*, track:tracks(*)")
+          .eq("date", targetDate);
 
-        for (const t of dbTracks) {
-          const albumKey = t.album_name || "Singles & Parcerias";
-          const latestMetric = t.track_daily_metrics?.[0] || {};
-          const daily = latestMetric.spotify_daily_streams || 300000;
-          const total = latestMetric.spotify_total_streams || 250000000;
-
-          if (!albumMap[albumKey]) {
-            albumMap[albumKey] = {
-              name: albumKey,
-              era: t.era || "Singles & Parcerias",
-              release_year: t.release_date ? parseInt(t.release_date.split("-")[0], 10) : 2019,
-              cover_url: t.cover_url,
-              total_spotify_streams: 0,
-              total_youtube_views: 0,
-              track_count: 0,
-              tracks: [],
-            };
+        if (dbMetrics && dbMetrics.length > 0) {
+          const byTitle = new Map<string, any>();
+          for (const row of dbMetrics) {
+            if (row.track?.title) {
+              byTitle.set(row.track.title.toLowerCase().trim(), row);
+            }
           }
 
-          albumMap[albumKey].total_spotify_streams += total;
-          albumMap[albumKey].total_youtube_views += latestMetric.youtube_total_views || 300000000;
-          albumMap[albumKey].track_count += 1;
-          albumMap[albumKey].tracks.push({
-            id: t.id,
-            spotify_id: t.spotify_id,
-            youtube_video_id: t.youtube_video_id,
-            title: t.title,
-            album_name: t.album_name,
-            era: t.era,
-            cover_url: t.cover_url,
-            release_date: t.release_date,
-            duration_ms: t.duration_ms,
-            daily_streams: daily,
-            total_streams: total,
-          });
+          for (const album of baseAlbums) {
+            for (const track of album.tracks) {
+              const live = byTitle.get(track.title.toLowerCase().trim());
+              if (live) {
+                track.daily_streams = live.spotify_daily_streams || track.daily_streams;
+                track.total_streams = live.spotify_total_streams || track.total_streams;
+                if (live.track?.cover_url && !live.track.cover_url.includes("i.scdn.co")) {
+                  track.cover_url = live.track.cover_url;
+                }
+              }
+            }
+          }
         }
-
-        return Object.values(albumMap);
       }
     } catch (e) {
-      console.error("Exceção ao agregar discografia:", e);
+      console.error("Exceção ao enriquecer discografia com Supabase:", e);
     }
   }
 
-  return allAlbums;
+  return baseAlbums;
 }
+
+export { allTracks };

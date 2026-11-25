@@ -54,13 +54,28 @@ export async function runMilestoneCalculator() {
       dailyAverage = Math.round(sum / recentMetrics.length);
     }
 
-    const remaining = m.target_value - m.current_value;
+    const { data: latestTrackMetric } = await supabase
+      .from("track_daily_metrics")
+      .select("spotify_total_streams, youtube_total_views")
+      .eq("track_id", m.track_id)
+      .order("date", { ascending: false })
+      .limit(1)
+      .single();
+
+    const liveCurrent =
+      m.platform === "spotify"
+        ? latestTrackMetric?.spotify_total_streams || m.current_value
+        : latestTrackMetric?.youtube_total_views || m.current_value;
+
+    const remaining = m.target_value - liveCurrent;
     if (remaining <= 0) {
+      const todayBRT = new Date().toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
       await supabase
         .from("milestones")
         .update({
+          current_value: liveCurrent,
           is_completed: true,
-          completion_date: new Date().toISOString().split("T")[0],
+          completion_date: todayBRT,
           updated_at: new Date().toISOString(),
         })
         .eq("id", m.id);
@@ -69,18 +84,19 @@ export async function runMilestoneCalculator() {
       const days = Math.ceil(remaining / (dailyAverage > 0 ? dailyAverage : 10000));
       const projectedDate = new Date();
       projectedDate.setDate(projectedDate.getDate() + days);
-      const estimatedStr = projectedDate.toISOString().split("T")[0];
+      const estimatedStr = projectedDate.toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
 
       await supabase
         .from("milestones")
         .update({
+          current_value: liveCurrent,
           daily_average: dailyAverage,
           estimated_completion_date: estimatedStr,
           updated_at: new Date().toISOString(),
         })
         .eq("id", m.id);
 
-      console.log(`📈 [${m.track?.title}] -> ${m.platform.toUpperCase()} Meta: ${m.target_value.toLocaleString("pt-BR")} | Faltam: ${remaining.toLocaleString("pt-BR")} (~${days} dias a ${dailyAverage.toLocaleString("pt-BR")}/dia -> ${estimatedStr})`);
+      console.log(`📈 [${m.track?.title}] -> ${m.platform.toUpperCase()} Meta: ${m.target_value.toLocaleString("pt-BR")} | Atual: ${liveCurrent.toLocaleString("pt-BR")} | Faltam: ${remaining.toLocaleString("pt-BR")} (~${days} dias a ${dailyAverage.toLocaleString("pt-BR")}/dia -> ${estimatedStr})`);
     }
   }
 

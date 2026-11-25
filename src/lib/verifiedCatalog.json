@@ -55,6 +55,27 @@
     "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a6/e2/39/a6e23938-4518-686d-a3f5-7e8284f99e3c/mzaf_7245882645108078024.plus.aac.p.m4a",
     "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/9f/1b/6b/9f1b6b0e-3ff7-d727-f79a-46d35e59d8f9/7891430121877.jpg/600x600bb.jpg"
   },
+  "esqueca-me-se-for-capaz": {
+    "title": "Esqueça-Me Se For Capaz",
+    "artist": "Marília Mendonça & Maiara & Maraisa",
+    "album": "Festa das Patroas 35%",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ea/58/9b/ea589bd5-a7dd-0cd8-3cf2-dc7e79f58306/mzaf_15620079934662541504.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/dd/a1/7c/dda17c30-f16b-d92f-ae10-7778d22296d0/7891430593179.jpg/600x600bb.jpg"
+  },
+  "troca-de-calcada": {
+    "title": "Troca de Calçada",
+    "artist": "Marília Mendonça",
+    "album": "Troca de Calçada - Single",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/12/4b/47/124b4789-5303-9e03-8865-1dc91344e8d8/mzaf_15815813613272533440.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/96/55/9a/96559ac8-b6e2-fee6-7408-704a933e727c/7891430534370.jpg/600x600bb.jpg"
+  },
+  "presepada": {
+    "title": "Presepada",
+    "artist": "Marília Mendonça & Maiara & Maraisa",
+    "album": "Festa das Patroas 35%",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/af/cf/cd/afcfcd34-67be-798d-9620-09bf8d37b3ed/mzaf_83995690537661276.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/dd/a1/7c/dda17c30-f16b-d92f-ae10-7778d22296d0/7891430593179.jpg/600x600bb.jpg"
+  },
   "alo-porteiro": {
     "title": "Alô Porteiro (Ao Vivo)",
     "artist": "Marília Mendonça",
@@ -104,6 +125,118 @@
     "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bd/63/44/bd634402-900a-94ff-e6e2-8da0adbfb5a3/mzaf_11941888950629648238.plus.aac.p.m4a",
     "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/75/06/e3/7506e3f1-0bdb-1c7c-22a0-52f3d8026750/7891430355579.jpg/600x600bb.jpg"
   },
+  "te-amo-demais": {
+    "title": "Te Amo Demais",
+    "artist": "Marília Mendonça",
+    "album": "Decretos Reais",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a2/c2/27/a2c2277d-b462-d36a-420b-e648cbb38f07/mzaf_626230569760661807.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/75/e2/c5/75e2c543-f5c4-d972-c20e-8c5c5f65e99d/7891430757274.jpg/600x600bb.jpg"
+  },
+  "nao-era-para-ser-assim": {
+    "title": "Não Era Pra Ser Assim",
+    "artist": "Marília Mendonça",
+    "album": "Decretos Reais, Vol. 1 - EP",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/v4/48/2c/36/482c3669-9f68-8655-a843-d37eef41de54/mzaf_6285764777802227597.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/81/a0/94/81a094b5-39a1-8739-5e38-cb2dc8b27d1d/7891430585778.jpg/600x600bb.jpg"
+  },
+  "flor-e-o-beija-flor": {
+    "title": "Flor E O Beija-Flor (Ao Vivo) [feat. Marília Mendonça]",
+    "artist": "Henrique & Juliano",
+    "album": "Novas Histórias (Ao Vivo)",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9a/81/52/9a815249-38c2-bfd7-d943-f82d3e620292/mzaf_16565726304841231321.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/19/31/7a/19317acb-551e-46a2-0b4a-6c77e2a27655/00602438705573_Cover.jpg/600x600bb.jpg"
+  },
+  "impasse": {
+    "title": "Impasse",
+    "artist": "Marília Mendonça feat. Henrique & Juliano",
+    "album": "Impasse (feat. Henrique & Juliano) - Single",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0f/8b/47/0f8b4709-e3a2-beac-705d-6c0e62700aa9/mzaf_14913328964302096561.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music1/v4/aa/71/71/aa7171a7-1fe7-3759-0d30-83895c114600/0.jpg/600x600bb.jpg"
+  },
+  "transplante": {
+    "title": "Transplante (feat. Bruno & Marrone)",
+    "artist": "Marília Mendonça",
+    "album": "Transplante (feat. Bruno & Marrone) - Single",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/d8/6f/0b/d86f0b7f-cc63-ea6b-d4e5-f0c0ce598a22/mzaf_8577555971811356159.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/fb/6a/8b/fb6a8b73-88a5-c4bd-9de0-40f36c21bebb/7891430215378.jpg/600x600bb.jpg"
+  },
+  "cuidando-de-longe": {
+    "title": "Cuidando de Longe (feat. Marília Mendonça)",
+    "artist": "Gal Costa",
+    "album": "A Pele do Futuro",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ee/48/d5/ee48d5d2-48cc-a03f-6f3c-7a0fa8bb1917/mzaf_15255522853756696478.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/2c/89/64/2c896448-a1ba-0979-9edc-4a26c3031c20/192562976555.jpg/600x600bb.jpg"
+  },
+  "some-que-ele-vem-atras": {
+    "title": "Some Que Ele Vem Atrás",
+    "artist": "Anitta & Marília Mendonça",
+    "album": "Some Que Ele Vem Atrás - Single",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/30/50/37/30503700-e922-db2d-c71a-99ee950f8ca4/mzaf_2119440781732498207.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/59/da/33/59da3323-6b85-3643-d963-d59363ce0423/190296854279.jpg/600x600bb.jpg"
+  },
+  "mal-feito": {
+    "title": "Mal Feito",
+    "artist": "Hugo & Guilherme & Marília Mendonça",
+    "album": "Mal Feito - Single",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/9e/49/52/9e4952ab-4f38-3705-859a-0e4656638fcd/mzaf_561245559597126143.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/07/75/d6/0775d63c-7de3-8c7f-ee5d-a2d1b29a9670/7891430634773.jpg/600x600bb.jpg"
+  },
+  "foi-por-conveniencia": {
+    "title": "Foi por Conveniência",
+    "artist": "Marília Mendonça",
+    "album": "Manuscritos, Capítulo I - EP",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/44/37/e2/4437e2a8-3d24-658e-86fb-72d81fba6427/mzaf_3891900563206527199.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/34/2d/54/342d5453-f7cd-150f-d8eb-0c2a92d125c1/196873267944.jpg/600x600bb.jpg"
+  },
+  "o-que-falta-em-voce-sou-eu": {
+    "title": "O Que Falta Em Você Sou Eu",
+    "artist": "Marília Mendonça",
+    "album": "Manuscritos, Capítulo II",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/40/19/bf/4019bf9f-d465-ca58-83c1-fd5ea8871ed5/mzaf_15237345533041693490.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/da/d2/ec/dad2ecdc-12a6-af80-32ae-0319c401779e/196874977620.jpg/600x600bb.jpg"
+  },
+  "tudo-vai-ficar-bem": {
+    "title": "Tudo Vai Ficar Bem",
+    "artist": "Marília Mendonça",
+    "album": "Tudo Vai Ficar Bem - Single",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9d/94/af/9d94afbe-22db-ca80-6125-516794b00cdc/mzaf_5013351775305031491.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/bf/aa/73/bfaa73d6-d992-bed9-53b6-4ded0bda4491/196874596692.jpg/600x600bb.jpg"
+  },
+  "estranho": {
+    "title": "Estranho (Acústico)",
+    "artist": "Marília Mendonça",
+    "album": "Agora É Que São Elas 2 (Ao Vivo) - Acústico",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/39/55/573955f7-988b-267a-ed89-85fa8504d877/mzaf_17033804118482497027.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/6f/c7/cb/6fc7cb10-973f-25bb-ea48-44a668911a70/7891430254377.jpg/600x600bb.jpg"
+  },
+  "quero-voce-do-jeito-que-quiser": {
+    "title": "Quero Você do Jeito Que Quiser",
+    "artist": "Marília Mendonça & Maiara & Maraisa",
+    "album": "Festa das Patroas 1 - EP",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview122/v4/d8/b6/68/d8b668ee-d1bc-c64e-b94e-51f9a85b2825/mzaf_11859853023887037666.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/35/a9/e6/35a9e625-90f3-e6a8-7543-b544e4bfd795/7891430484279.jpg/600x600bb.jpg"
+  },
+  "a-culpa-e-dele": {
+    "title": "A Culpa É Dele (feat. Maiara & Maraisa) [Acústico]",
+    "artist": "Marília Mendonça",
+    "album": "Agora É Que São Elas 2 (Ao Vivo) - Acústico",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bf/50/aa/bf50aa0e-7051-f8fa-fac9-df2838e36ef7/mzaf_15886272909480313718.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/6f/c7/cb/6fc7cb10-973f-25bb-ea48-44a668911a70/7891430254377.jpg/600x600bb.jpg"
+  },
+  "mudou-a-estacao": {
+    "title": "Mudou a Estação (feat. Henrique & Juliano) [Ao Vivo]",
+    "artist": "Marília Mendonça",
+    "album": "Realidade - Ao Vivo Em Manaus",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ee/5a/e9/ee5ae984-3460-cad1-0aeb-1a9736b3089a/mzaf_15171722674233642434.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/01/da/2c/01da2c5b-ff1f-e9a1-a634-4db138e1a286/7891430447427.jpg/600x600bb.jpg"
+  },
+  "meu-cupido-e-gari": {
+    "title": "Meu Cupido É Gari (Ao Vivo)",
+    "artist": "Marília Mendonça",
+    "album": "Marília Mendonça (Ao Vivo)",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7b/b8/70/7bb8700c-001e-1c82-6a4a-9de68ea2f622/mzaf_3990610010642946071.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/1e/68/40/1e684061-025d-60a4-28d6-16cb4e0b37b7/7891430399023.jpg/600x600bb.jpg"
+  },
   "cuida-bem-dela": {
     "title": "Cuida Bem Dela (Ao Vivo)",
     "artist": "Henrique & Juliano",
@@ -145,5 +278,54 @@
     "album": "Na Praia (Ao Vivo)",
     "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d4/1c/c1/d41cc1e9-6889-63b9-48c8-44e33e0c57f5/mzaf_11424965210184315961.plus.aac.p.m4a",
     "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/52/a5/aa/52a5aa33-ec6b-1c52-fd57-73a183f587b0/191773483616.jpg/600x600bb.jpg"
+  },
+  "minha-heranca": {
+    "title": "Minha Herança (Ao Vivo)",
+    "artist": "João Neto & Frederico",
+    "album": "João Neto & Frederico - Ao Vivo Em Palmas",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/17/8c/08/178c088a-db39-2756-0a69-a78944ac6e57/mzaf_2713033866697523365.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music/45/fd/1d/mzi.aculzxmi.jpg/600x600bb.jpg"
+  },
+  "no-dia-do-seu-casamento": {
+    "title": "No Dia do Seu Casamento",
+    "artist": "Maiara & Maraisa",
+    "album": "No Dia do Seu Casamento",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/6f/7c/cf/6f7ccff8-9d92-8cef-abbc-b551adfc3cf0/mzaf_13230490919456369469.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music3/v4/51/76/1c/51761cd7-33a2-1a41-2594-a7af04ae2347/0.jpg/600x600bb.jpg"
+  },
+  "dois-idiotas": {
+    "title": "Dois Idiotas",
+    "artist": "Maiara & Maraisa",
+    "album": "Dois Idiotas - Single",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/97/8c/0f/978c0fc9-e091-c0bd-ee7f-693c2aa171a9/mzaf_5331981300469601361.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music3/v4/bb/29/10/bb2910cc-24ee-928e-58d8-13be7ae4a633/0.jpg/600x600bb.jpg"
+  },
+  "show-completo": {
+    "title": "Show Completo (Ao Vivo)",
+    "artist": "Maiara & Maraisa",
+    "album": "Ao Vivo em Goiânia",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/06/63/3c/06633c64-49df-7579-0b30-ba635eb07a08/mzaf_17952033750167967153.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/c3/74/e1/c374e1a3-00a4-65d7-5ef7-01804294a5c1/7891430419929.jpg/600x600bb.jpg"
+  },
+  "gago": {
+    "title": "Gago",
+    "artist": "Lucas Lucco",
+    "album": "Tá Diferente",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a5/a6/c6/a5a6c633-e345-b7e3-c355-60f5537f6ec5/mzaf_8248491846089187034.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/f1/2b/e8/f12be87a-7a65-397f-a13a-14a4eb42a64c/886444343954.jpg/600x600bb.jpg"
+  },
+  "preferencia": {
+    "title": "Preferência (Ao Vivo)",
+    "artist": "Cleber & Cauan",
+    "album": "Sonho (Ao Vivo)",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/41/29/e3/4129e3c9-e4ed-361a-ebe0-2d380f293b6e/mzaf_17269836062216385014.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/62/bb/2c/62bb2c56-f440-b476-efec-1c8c7b2a1c06/632103059960.png/600x600bb.jpg"
+  },
+  "vai-ter-balanga": {
+    "title": "Vai Ter Balanga (Ao Vivo)",
+    "artist": "João Neto & Frederico",
+    "album": "João Neto & Frederico - Ao Vivo Em Palmas",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e3/84/d6/e384d693-1669-6105-948e-68e6d5076875/mzaf_3172411575689232507.plus.aac.p.m4a",
+    "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music/45/fd/1d/mzi.aculzxmi.jpg/600x600bb.jpg"
   }
 }
