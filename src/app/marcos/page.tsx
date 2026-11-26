@@ -7,7 +7,9 @@ export const metadata = {
   description: "Acompanhe as próximas metas de streaming (100M, 450M, 600M, 700M) e participe dos mutirões dos fãs.",
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
 
 export default async function MarcosPage() {
   const milestones = await getMilestones();

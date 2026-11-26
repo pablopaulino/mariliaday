@@ -12,7 +12,9 @@ import { ErasTimeline } from "@/components/dashboard/ErasTimeline";
 import { LegacyShowcase } from "@/components/dashboard/LegacyShowcase";
 import { EphemerisBanner } from "@/components/dashboard/EphemerisBanner";
 
-export const revalidate = 60; // Revalidate every minute
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
 
 export default async function HomePage() {
   const [statsData, metricsData, ephemerides, fanMessages] = await Promise.all([

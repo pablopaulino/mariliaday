@@ -7,7 +7,9 @@ export const metadata = {
   description: "Mural interativo de homenagens e cartas deixadas por fãs de todo o Brasil para Marília Mendonça.",
 };
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
 
 export default async function MensagensPage() {
   const fanMessages = await getFanMessages();

@@ -8,7 +8,9 @@ export const metadata = {
     "Explore toda a discografia de Marília Mendonça: álbuns ao vivo, projeto Patroas, EPs, singles, Decretos Reais e Manuscritos (2026).",
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
 
 export default async function DiscografiaPage() {
   const albums = await getAlbums();
