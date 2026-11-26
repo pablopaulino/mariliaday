@@ -50,7 +50,7 @@ export function HeroKpis({ stats }: HeroKpisProps) {
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-2">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs font-semibold text-emerald-300">
                   <span>🎧</span>
-                  <span>15B+ Streams no Spotify (1ª Brasileira)</span>
+                  <span>16B+ Streams no Spotify (1ª Brasileira a bater 15B)</span>
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs font-semibold text-amber-300">
                   <span>🏆</span>
@@ -145,7 +145,7 @@ export function HeroKpis({ stats }: HeroKpisProps) {
               {formatCompactNumber(combinedDailyPlays)}
             </div>
             <p className="text-xs text-zinc-400 mt-1">
-              15B+ streams acumulados no Spotify
+              16,0B+ streams acumulados no Spotify
             </p>
           </div>
           <div className="mt-4 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">

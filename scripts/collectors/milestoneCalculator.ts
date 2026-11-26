@@ -41,6 +41,7 @@ export async function runMilestoneCalculator() {
       .from("track_daily_metrics")
       .select("spotify_daily_streams, youtube_daily_views, date")
       .eq("track_id", m.track_id)
+      .gte("date", "2026-11-25")
       .order("date", { ascending: false })
       .limit(7);
 

@@ -8,7 +8,6 @@ dotenv.config({ path: ".env.local" });
 dotenv.config();
 
 import { runSpotifyCollector } from "./spotifyCollector";
-import { runYoutubeCollector } from "./youtubeCollector";
 import { runDeezerCollector } from "./deezerCollector";
 import { runMilestoneCalculator } from "./milestoneCalculator";
 
@@ -19,16 +18,13 @@ async function main() {
   console.log("=================================================");
 
   try {
-    console.log("\n[1/4] Executando Spotify Collector...");
+    console.log("\n[1/3] Executando Sincronização Ao Vivo (Spotify SSR + Kworb + YouTube)...");
     await runSpotifyCollector();
 
-    console.log("\n[2/4] Executando YouTube Collector...");
-    await runYoutubeCollector();
-
-    console.log("\n[3/4] Executando Deezer Collector...");
+    console.log("\n[2/3] Executando Deezer Collector...");
     await runDeezerCollector();
 
-    console.log("\n[4/4] Executando Milestone Calculator...");
+    console.log("\n[3/3] Executando Milestone Calculator...");
     await runMilestoneCalculator();
 
     console.log("\n=================================================");

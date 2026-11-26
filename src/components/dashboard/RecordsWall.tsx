@@ -44,9 +44,9 @@ export function RecordsWall({ stats }: RecordsWallProps) {
   const records: RecordItem[] = [
     {
       icon: <Zap className="w-5 h-5" />,
-      value: "15B+",
+      value: "16B+",
       label: "Streams no Spotify",
-      detail: "Marco superado em março de 2026. 1ª artista brasileira a alcançar 10B, 12B e 15B.",
+      detail: "16,03 bilhões de streams no catálogo completo (c/ feats) — 1ª brasileira a superar 15B.",
       accentColor: "emerald",
     },
     {

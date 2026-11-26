@@ -2,11 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { ArtistDailyStats } from "@/types";
-import { formatCompactNumber, formatNumber, formatDelta } from "@/lib/utils";
-import { TrendingUp, Calendar, Activity, Sparkles, BarChart2 } from "lucide-react";
+import { formatCompactNumber, formatNumber } from "@/lib/utils";
+import { TrendingUp } from "lucide-react";
 
 interface EvolutionChartProps {
   stats: ArtistDailyStats;
+  history?: ArtistDailyStats[];
 }
 
 type MetricType = "streams" | "listeners";
@@ -18,49 +19,64 @@ interface DataPoint {
   streams: number;
   listeners: number;
   delta: number;
+  isReal?: boolean;
 }
 
-export function EvolutionChart({ stats }: EvolutionChartProps) {
+export function EvolutionChart({ stats, history = [] }: EvolutionChartProps) {
   const [metric, setMetric] = useState<MetricType>("streams");
   const [range, setRange] = useState<TimeRange>("30d");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  // Generate historical data anchored on the real stats
   const chartData: DataPoint[] = useMemo(() => {
     const daysCount = range === "7d" ? 7 : range === "15d" ? 15 : range === "30d" ? 30 : 90;
     const points: DataPoint[] = [];
 
-    const baseStreams = (stats.spotify_daily_streams || 6940000) + (stats.youtube_daily_views || 5800000);
-    const baseListeners = stats.spotify_monthly_listeners || 13942810;
+    const historyMap = new Map<string, ArtistDailyStats>();
+    for (const h of history) {
+      if (h.date) historyMap.set(h.date, h);
+    }
 
-    const todayDate = stats.date ? new Date(`${stats.date}T12:00:00`) : new Date();
+    const baseStreams = (stats.spotify_daily_streams || 5245952) + (stats.youtube_daily_views || 3912391);
+    const baseListeners = stats.spotify_monthly_listeners || 13920013;
+
+    const anchorDate = stats.date ? new Date(`${stats.date}T12:00:00`) : new Date();
 
     for (let i = daysCount - 1; i >= 0; i--) {
-      const d = new Date(todayDate);
+      const d = new Date(anchorDate);
       d.setDate(d.getDate() - i);
-
-      // Realistic historical curve with weekend spikes and positive momentum
-      const dayOfWeek = d.getDay(); // 0 is Sunday, 5 is Friday, 6 is Saturday
-      const weekendBonus = dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0 ? 1.08 : 0.98;
-      const trendFactor = 1 - (i / daysCount) * 0.04; // steady upward growth
-      const randomNoise = 1 + Math.sin(i * 1.5) * 0.02;
-
-      const calcStreams = Math.round(baseStreams * trendFactor * weekendBonus * randomNoise);
-      const calcListeners = Math.round(baseListeners - i * 1850 + Math.sin(i) * 4500);
+      const isoDate = d.toISOString().split("T")[0];
+      const realRow = historyMap.get(isoDate);
 
       const dayStr = d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
 
-      points.push({
-        date: d.toISOString().split("T")[0],
-        label: dayStr,
-        streams: calcStreams,
-        listeners: calcListeners,
-        delta: i === 0 ? stats.spotify_listeners_delta : Math.round(15000 + Math.sin(i * 2) * 8000),
-      });
+      if (realRow) {
+        points.push({
+          date: isoDate,
+          label: dayStr,
+          streams: (realRow.spotify_daily_streams || 0) + (realRow.youtube_daily_views || 0),
+          listeners: realRow.spotify_monthly_listeners || baseListeners,
+          delta: realRow.spotify_listeners_delta || 0,
+          isReal: true,
+        });
+      } else {
+        const dayOfWeek = d.getDay();
+        const weekendBonus = dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0 ? 1.06 : 0.98;
+        const trendFactor = 1 - (i / daysCount) * 0.03;
+        const randomNoise = 1 + Math.sin(i * 1.5) * 0.015;
+
+        points.push({
+          date: isoDate,
+          label: dayStr,
+          streams: Math.round(baseStreams * trendFactor * weekendBonus * randomNoise),
+          listeners: Math.round(baseListeners - i * 1850 + Math.sin(i) * 4500),
+          delta: i === 0 ? stats.spotify_listeners_delta : Math.round(15000 + Math.sin(i * 2) * 8000),
+          isReal: false,
+        });
+      }
     }
 
     return points;
-  }, [stats, range]);
+  }, [stats, history, range]);
 
   const activeValueKey = metric === "streams" ? "streams" : "listeners";
   const values = chartData.map((d) => d[activeValueKey]);
@@ -68,19 +84,17 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
   const maxValue = Math.max(...values) * 1.02;
   const rangeDiff = maxValue - minValue || 1;
 
-  // Chart SVG Coordinates calculation
   const svgWidth = 800;
   const svgHeight = 260;
   const paddingX = 25;
   const paddingY = 25;
 
   const pointsCoordinates = chartData.map((d, idx) => {
-    const x = paddingX + (idx / (chartData.length - 1)) * (svgWidth - paddingX * 2);
+    const x = paddingX + (idx / Math.max(1, chartData.length - 1)) * (svgWidth - paddingX * 2);
     const y = svgHeight - paddingY - ((d[activeValueKey] - minValue) / rangeDiff) * (svgHeight - paddingY * 2);
     return { x, y, data: d };
   });
 
-  // Build SVG Path with smooth curves
   const pathD = useMemo(() => {
     if (pointsCoordinates.length < 2) return "";
     let d = `M ${pointsCoordinates[0].x} ${pointsCoordinates[0].y}`;
@@ -93,7 +107,6 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
     return d;
   }, [pointsCoordinates]);
 
-  // Area Path for rich golden gradient
   const areaD = useMemo(() => {
     if (!pathD || pointsCoordinates.length === 0) return "";
     const first = pointsCoordinates[0];
@@ -118,17 +131,16 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
           <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
             <span>Evolução Diária do Legado</span>
             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-              Em alta contínua
+              {history.length > 0 ? `${history.length} dias reais no banco` : "Monitoramento ativo"}
             </span>
           </h2>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Acompanhe a curva de crescimento diário nos charts oficiais ao longo do tempo.
+            Acompanhe a curva de consumo diário ancorada nos registros oficiais do Supabase.
           </p>
         </div>
 
         {/* Metric & Time Range Filters */}
         <div className="flex flex-wrap items-center gap-3">
-          {/* Metric Selector Tabs */}
           <div className="flex rounded-xl bg-zinc-800/80 p-1 border border-white/5">
             <button
               onClick={() => setMetric("streams")}
@@ -152,7 +164,6 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
             </button>
           </div>
 
-          {/* Range Selector */}
           <div className="flex rounded-xl bg-zinc-800/80 p-1 border border-white/5 text-xs font-medium">
             {(["7d", "15d", "30d", "90d"] as TimeRange[]).map((r) => (
               <button
@@ -186,7 +197,7 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
         <div className="p-4 rounded-2xl bg-black/40 border border-white/5">
           <span className="text-xs text-zinc-400 font-medium">Média do Período:</span>
           <div className="text-xl sm:text-2xl font-bold text-white font-mono mt-1">
-            {metric === "streams" ? formatCompactNumber(avgValue) : formatCompactNumber(avgValue)}
+            {formatCompactNumber(avgValue)}
           </div>
           <span className="text-[11px] text-zinc-500">por dia monitorado</span>
         </div>
@@ -194,18 +205,24 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
         <div className="p-4 rounded-2xl bg-black/40 border border-white/5">
           <span className="text-xs text-zinc-400 font-medium">Pico no Período:</span>
           <div className="text-xl sm:text-2xl font-bold text-amber-300 font-mono mt-1">
-            {metric === "streams" ? formatCompactNumber(peakValue) : formatCompactNumber(peakValue)}
+            {formatCompactNumber(peakValue)}
           </div>
-          <span className="text-[11px] text-zinc-500">recorde de consumo</span>
+          <span className="text-[11px] text-zinc-500">recorde do intervalo</span>
         </div>
 
         <div className="p-4 rounded-2xl bg-black/40 border border-white/5">
-          <span className="text-xs text-zinc-400 font-medium">Tendência:</span>
-          <div className="text-xl sm:text-2xl font-bold text-emerald-400 font-mono mt-1 flex items-center gap-1">
-            <span>+3,8%</span>
-            <span className="text-xs font-normal text-zinc-400">vs período ant.</span>
+          <span className="text-xs text-zinc-400 font-medium">Variação Ouvintes 24h:</span>
+          <div
+            className={`text-xl sm:text-2xl font-bold font-mono mt-1 flex items-center gap-1 ${
+              stats.spotify_listeners_delta >= 0 ? "text-emerald-400" : "text-rose-400"
+            }`}
+          >
+            <span>
+              {stats.spotify_listeners_delta >= 0 ? "+" : ""}
+              {formatNumber(stats.spotify_listeners_delta)}
+            </span>
           </div>
-          <span className="text-[11px] text-emerald-500 font-medium">crescimento sustentado</span>
+          <span className="text-[11px] text-zinc-400 font-medium">variação real Spotify</span>
         </div>
       </div>
 
@@ -219,14 +236,12 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
             onMouseLeave={() => setHoveredIndex(null)}
           >
             <defs>
-              {/* Golden Area Gradient */}
               <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.35" />
                 <stop offset="60%" stopColor="#D4AF37" stopOpacity="0.08" />
                 <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
               </linearGradient>
 
-              {/* Stroke Gradient */}
               <linearGradient id="strokeGradient" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#F59E0B" />
                 <stop offset="50%" stopColor="#D4AF37" />
@@ -234,7 +249,6 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
               </linearGradient>
             </defs>
 
-            {/* Horizontal Grid lines */}
             {[0.2, 0.5, 0.8].map((ratio, i) => {
               const y = paddingY + ratio * (svgHeight - paddingY * 2);
               return (
@@ -251,10 +265,8 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
               );
             })}
 
-            {/* Area Path */}
             <path d={areaD} fill="url(#chartGradient)" />
 
-            {/* Main Curve Line */}
             <path
               d={pathD}
               fill="none"
@@ -264,30 +276,25 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
               strokeLinejoin="round"
             />
 
-            {/* Interactive Points and Hover Trigger */}
             {pointsCoordinates.map((pt, idx) => (
               <g
                 key={idx}
                 onMouseEnter={() => setHoveredIndex(idx)}
                 className="cursor-pointer"
               >
-                {/* Invisible large touch target */}
                 <circle cx={pt.x} cy={pt.y} r={14} fill="transparent" />
-
-                {/* Point circle */}
                 <circle
                   cx={pt.x}
                   cy={pt.y}
-                  r={hoveredIndex === idx ? 6 : idx === pointsCoordinates.length - 1 ? 5 : 2.5}
+                  r={hoveredIndex === idx ? 6 : idx === pointsCoordinates.length - 1 ? 5 : pt.data.isReal ? 4 : 2.5}
                   className="transition-all duration-200"
-                  fill={hoveredIndex === idx ? "#FFFFFF" : "#D4AF37"}
+                  fill={hoveredIndex === idx ? "#FFFFFF" : pt.data.isReal ? "#10B981" : "#D4AF37"}
                   stroke="#121215"
                   strokeWidth={hoveredIndex === idx ? 3 : 1.5}
                 />
               </g>
             ))}
 
-            {/* Hover Vertical Scrubber Line */}
             {hoveredIndex !== null && hoveredPoint && (
               <g>
                 <line
@@ -318,7 +325,7 @@ export function EvolutionChart({ stats }: EvolutionChartProps) {
           <span className="hidden sm:inline">
             {chartData[Math.floor(chartData.length / 2)]?.label}
           </span>
-          <span className="text-amber-400 font-bold">{chartData[chartData.length - 1]?.label} (Hoje)</span>
+          <span className="text-amber-400 font-bold">{chartData[chartData.length - 1]?.label} (Última coleta)</span>
         </div>
       </div>
     </div>

@@ -168,27 +168,71 @@ const MASTER_TRACKS = [
     cover_url: catalog["troca-de-calcada"].artworkUrl,
     release_date: "2021-01-29",
     duration_ms: 198000,
-    spotify_daily: 302400,
-    spotify_total: 274810900,
-    youtube_views: 423390031,
+    spotify_daily: 196140,
+    spotify_total: 338327511,
+    youtube_views: 423391389,
     youtube_daily: 284500,
+  },
+  {
+    spotify_id: "2Gvn46nwyQhUnQiFhlP7WX",
+    youtube_video_id: "JPWjJlNtE_w",
+    title: "Como Faz Com Ela",
+    album_name: "Marília Mendonça (Ao Vivo)",
+    era: "Ao Vivo (2016)",
+    cover_url: catalog["como-faz-com-ela"].artworkUrl,
+    release_date: "2016-03-04",
+    duration_ms: 194000,
+    spotify_daily: 215733,
+    spotify_total: 260060436,
+    youtube_views: 245000000,
+    youtube_daily: 145000,
+  },
+  {
+    spotify_id: "0ni9SLDejii0CgTyYug5Lg",
+    youtube_video_id: "LmRrLl8aLfE",
+    title: "Flor e o Beija-Flor",
+    album_name: "Novas Histórias (feat. Marília Mendonça)",
+    era: "Singles & Parcerias",
+    cover_url: catalog["flor-e-o-beija-flor"].artworkUrl,
+    release_date: "2015-10-15",
+    duration_ms: 215000,
+    spotify_daily: 83118,
+    spotify_total: 233095102,
+    youtube_views: 390000000,
+    youtube_daily: 130000,
+  },
+  {
+    spotify_id: "4UANYptjv2kpV6IY7IjXoJ",
+    youtube_video_id: "ebG36xtK87A",
+    title: "Bem Pior Que Eu",
+    album_name: "Todos Os Cantos, Vol. 1",
+    era: "Todos os Cantos (2019)",
+    cover_url: catalog["bem-pior-que-eu"].artworkUrl,
+    release_date: "2019-02-22",
+    duration_ms: 176000,
+    spotify_daily: 72678,
+    spotify_total: 231153016,
+    youtube_views: 360000000,
+    youtube_daily: 110000,
   },
 ];
 
 async function seed() {
+  const { syncLiveDailyData } = await import("../src/lib/liveCollector");
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Sao_Paulo" });
+  const targetDate = "2026-11-25";
 
   // 1. Inserir / Atualizar artist_daily_stats
-  console.log("\n[1/6] Inserindo artist_daily_stats oficial...");
+  console.log("\n[1/6] Sincronizando artist_daily_stats inicial...");
   const artistDaily = {
-    date: today,
-    spotify_monthly_listeners: 13942810,
-    spotify_listeners_delta: 34910,
-    spotify_followers: 41614259,
-    spotify_daily_streams: 6942180,
+    date: targetDate,
+    spotify_monthly_listeners: 13920013,
+    spotify_listeners_delta: 32258,
+    spotify_followers: 41736584,
+    spotify_daily_streams: 5245952,
     youtube_subscribers: 27700000,
     youtube_total_views: 21609361488,
-    youtube_daily_views: 5840920,
+    youtube_daily_views: 3912391,
   };
 
   const { error: statErr } = await supabase
@@ -196,7 +240,7 @@ async function seed() {
     .upsert(artistDaily, { onConflict: "date" });
 
   if (statErr) console.error("❌ Erro ao salvar artist_daily_stats:", statErr);
-  else console.log(`✅ artist_daily_stats salvo para ${today} (Views YT: 21.6B, Inscritos: 27.7M)`);
+  else console.log(`✅ artist_daily_stats salvo para ${targetDate} (Ouvintes: 13.92M, Seguidores: 41.73M, YT: 21.6B)`);
 
   // 2. Inserir / Atualizar Tracks (com capas Apple Music!)
   console.log("\n[2/6] Inserindo catálogo mestre de tracks...");
@@ -229,8 +273,8 @@ async function seed() {
     }
   }
 
-  // 3. Inserir track_daily_metrics para hoje
-  console.log("\n[3/6] Inserindo track_daily_metrics...");
+  // 3. Inserir track_daily_metrics e sincronizar ao vivo (Kworb + Spotify + YouTube)
+  console.log("\n[3/6] Inserindo base de track_daily_metrics...");
   for (let i = 0; i < MASTER_TRACKS.length; i++) {
     const t = MASTER_TRACKS[i];
     const trackDbId = trackMap[t.spotify_id];
@@ -239,11 +283,11 @@ async function seed() {
     const { error: metricErr } = await supabase.from("track_daily_metrics").upsert(
       {
         track_id: trackDbId,
-        date: today,
+        date: targetDate,
         spotify_total_streams: t.spotify_total,
         spotify_daily_streams: t.spotify_daily,
         spotify_chart_position: i + 1,
-        spotify_chart_delta: i === 0 ? 0 : i % 2 === 0 ? 1 : -1,
+        spotify_chart_delta: 0,
         youtube_total_views: t.youtube_views,
         youtube_daily_views: t.youtube_daily,
         youtube_chart_position: i + 1,
@@ -255,60 +299,60 @@ async function seed() {
 
     if (metricErr) console.error(`❌ Erro métrica ${t.title}:`, metricErr);
   }
-  console.log(`✅ ${MASTER_TRACKS.length} track_daily_metrics gravadas com sucesso!`);
+  console.log(`✅ ${MASTER_TRACKS.length} track_daily_metrics gravadas!`);
 
-  // 4. Inserir Milestones
+  // 4. Inserir Milestones com metas reais atuais
   console.log("\n[4/6] Configurando milestones (Radar de Metas)...");
   await supabase.from("milestones").delete().neq("id", "00000000-0000-0000-0000-000000000000");
 
   const milestonesToInsert = [
     {
+      spotify_id: "4AAIAVjSyiq1N7SXKkwXZe", // Troca de Calçada
+      platform: "spotify",
+      target_value: 350000000,
+      current_value: 338327511,
+      daily_average: 196140,
+      estimated_completion_date: "2027-01-24",
+    },
+    {
+      spotify_id: "4qsOrxBv09HhNSpsgMRXdC", // Esqueça-Me Se For Capaz
+      platform: "spotify",
+      target_value: 400000000,
+      current_value: 380250955,
+      daily_average: 94658,
+      estimated_completion_date: "2027-06-22",
+    },
+    {
       spotify_id: "2K9kZpwD2CzTa6iiSYYOoO", // Leão
       platform: "spotify",
       target_value: 600000000,
-      current_value: 598410200,
-      daily_average: 542190,
-      estimated_completion_date: "2026-11-28",
-    },
-    {
-      spotify_id: "3tc8Z4lGzOIwmIVftsxO6o", // Graveto
-      platform: "spotify",
-      target_value: 450000000,
-      current_value: 402840900,
-      daily_average: 445200,
-      estimated_completion_date: "2027-03-11",
+      current_value: 551377178,
+      daily_average: 128945,
+      estimated_completion_date: "2027-12-07",
     },
     {
       spotify_id: "05bVdbvZcZ8QaZBLJdPhlK", // Infiel
       platform: "youtube",
       target_value: 700000000,
-      current_value: 685193227,
-      daily_average: 448100,
-      estimated_completion_date: "2026-12-28",
-    },
-    {
-      spotify_id: "4YhPcVIxIAJrLhFVPGbJkE", // De Quem É a Culpa?
-      platform: "youtube",
-      target_value: 650000000,
-      current_value: 609830589,
-      daily_average: 334900,
-      estimated_completion_date: "2027-03-25",
+      current_value: 685193717,
+      daily_average: 68274,
+      estimated_completion_date: "2027-06-30",
     },
     {
       spotify_id: "3GmJxfnUDrIs1iCfKUELFz", // Supera
       platform: "youtube",
       target_value: 600000000,
-      current_value: 587539192,
-      daily_average: 352100,
-      estimated_completion_date: "2026-12-31",
+      current_value: 587539853,
+      daily_average: 98720,
+      estimated_completion_date: "2027-03-31",
     },
     {
-      spotify_id: "7D5F5BzIon5zhzQrOU2pdN", // Ciumeira
+      spotify_id: "4YhPcVIxIAJrLhFVPGbJkE", // De Quem É a Culpa?
       platform: "youtube",
-      target_value: 600000000,
-      current_value: 556677836,
-      daily_average: 312000,
-      estimated_completion_date: "2027-04-12",
+      target_value: 650000000,
+      current_value: 609831274,
+      daily_average: 111744,
+      estimated_completion_date: "2027-11-20",
     },
   ];
 
@@ -376,6 +420,10 @@ async function seed() {
   } else {
     console.log("ℹ️ Cartas de fãs já existem na base.");
   }
+
+  console.log("\n🔄 Executando sincronização ao vivo final (Spotify SSR + Kworb + YouTube API)...");
+  const live = await syncLiveDailyData(supabase, { targetDate: today === targetDate ? today : targetDate, refreshTracksArtwork: true });
+  console.log(`✅ Live sync finalizado: ${live.tracksUpdated} faixas, ${live.milestonesUpdated} metas!`);
 
   console.log("\n=================================================");
   console.log("🎉 SEED COMPLETO E 100% PERSISTIDO NO SUPABASE!");

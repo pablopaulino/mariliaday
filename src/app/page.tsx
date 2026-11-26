@@ -30,7 +30,7 @@ export default async function HomePage() {
       <HeroKpis stats={statsData.today} />
 
       {/* 2. Gráficos Interativos de Evolução Diária */}
-      <EvolutionChart stats={statsData.today} />
+      <EvolutionChart stats={statsData.today} history={statsData.history} />
 
       {/* 3. Hall dos Recordes, Grammy Latino & Turnê Todos os Cantos */}
       <RecordsWall stats={statsData.today} />
